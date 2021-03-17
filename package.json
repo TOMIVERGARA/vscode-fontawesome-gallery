@@ -92,6 +92,8 @@
     "webpack-cli": "^4.4.0"
   },
   "dependencies": {
+    "figlet": "^1.5.0",
+    "minimist": "^1.2.5",
     "svelte-clipboard": "^0.0.2"
   }
 }
