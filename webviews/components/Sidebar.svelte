@@ -6,7 +6,7 @@
     let categoryList = getIconCategories();
 
     //Input Values
-    let iconName: string = '';
+    let searchTerm: string = '';
     let categorySelector: string = 'all';
 </script>
 
@@ -21,7 +21,7 @@
 
 <div>
     <form>
-       <input placeholder="Search icon..." bind:value={iconName} type="text">
+       <input placeholder="Search icon..." bind:value={searchTerm} type="text">
     </form>
     <select class="mb2" bind:value={categorySelector}>
         <option value="all" selected>All</option>
@@ -31,8 +31,10 @@
             {/each}
         </optgroup>
     </select>
-    <IconsPanel panelCategory={categorySelector}/>
+    <IconsPanel panelCategory={categorySelector} searchTerm={searchTerm}/>
     {#if categorySelector == 'all'}
-        <button class="mt2">Load more...</button>
+       {#if !searchTerm}
+          <button class="mt2">Load more...</button>
+       {/if}
     {/if}
 </div>

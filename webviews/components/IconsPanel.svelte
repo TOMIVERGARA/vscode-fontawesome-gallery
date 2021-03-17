@@ -4,14 +4,25 @@
 
     //Props
     export let panelCategory = 'all';
+    export let searchTerm;
 
     //Fetch first ~100 icons.
-    $: list = new IconList().generateList(panelCategory);
+    let List = new IconList();
+    $: list = List.generateList(panelCategory);
+    $: if(searchTerm){
+        list = List.filterIcons(searchTerm);
+    }else{
+        list = List.generateList(panelCategory);
+    }
 
+    let totalEntries = List.getTotal();
 </script>
 
 <div>
-    {#each list as icon}
-        <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
-    {/each}
+    <span><small>Showing <b>{list.length}</b> of {totalEntries}</small></span><br>
+    <div class="mt1">
+      {#each list as icon}
+          <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
+      {/each}
+    </div>
 </div>

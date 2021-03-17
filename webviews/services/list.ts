@@ -1,13 +1,24 @@
-import { iconsList } from '../data/fontawesome-5/metadata/icons'
+import { iconsList } from '../data/fontawesome-5/metadata/icons';
+import * as searchIndex from '../data/fontawesome-5/metadata/searchIndexArray.json'
 import Icon from './icon';
 import type { IconEntry, CategoryEntry } from '.';
 import { getIconsByCategory } from '../services/common';
 
 export interface IconEntryCollection {[key: string]: IconEntry; }
+export interface SearchIndexEntry {
+    name: string;
+    label: string;
+    searchTerms: string[];
+}
 
 export default class IconList {
     public readonly iconEntries: IconEntryCollection;
+    public readonly searchIndex = searchIndex.searchIndexArray as SearchIndexEntry[];
     icons: Icon[];
+    //Search Engine
+    searchReturnLimit: number = 10; // Maximum number of results to return
+    globalIdx: number = 0;
+
 
     constructor(){
         this.iconEntries = iconsList as IconEntryCollection;
@@ -18,34 +29,53 @@ export default class IconList {
       return type != null && typeof type[Symbol.iterator] === 'function'
     }
 
+    private listFromEntry(icon: string){
+        const entry: IconEntry = this.iconEntries[icon];
+        if(this.isIterable(entry.styles)){
+            for(const style of entry.styles){
+                const iconObj = new Icon(icon, entry.label, style);
+                this.icons.push(iconObj);
+            }
+        }
+    }
+
+    private search(filter: string){
+        const results: SearchIndexEntry[] = this.searchIndex.filter(icon => {
+            for(const searchTerm of icon.searchTerms){
+                return searchTerm.match(`^${filter}.*$`) || icon.label.toLowerCase().match(`^${filter}.*$`);
+            }
+        })
+        return results;
+    }
+
     public generateList(category: string){
         this.icons = [];
         if(category === "all"){
             let counter: number = 0;
             for(const icon in this.iconEntries){
-                if (counter > 99) return this.icons;
-                const entry: IconEntry = this.iconEntries[icon];
-
-                if(this.isIterable(entry.styles)){
-                    for(const style of entry.styles){
-                        const iconObj = new Icon(icon, entry.label, style);
-                        this.icons.push(iconObj);
-                    }
-                }
+                if (counter > 92) return this.icons;
+                this.listFromEntry(icon);
                 counter++;
             }
         }else{
            const iconsByCategory: CategoryEntry = getIconsByCategory(category);
            for(const icon of iconsByCategory.icons){
-                const entry: IconEntry = this.iconEntries[icon];
-                if(this.isIterable(entry.styles)){
-                    for(const style of entry.styles){
-                        const iconObj = new Icon(icon, entry.label, style);
-                        this.icons.push(iconObj);
-                    }
-                }
+                this.listFromEntry(icon)
            }
            return this.icons
         }
+    }
+
+    public filterIcons(filter: string){
+        this.icons = [];
+        const matches: SearchIndexEntry[] = this.search(filter);
+        for(const icon of matches){
+             this.listFromEntry(icon.name);
+        }
+        return this.icons;
+    }
+
+    public getTotal(){
+        return this.searchIndex.length;
     }
 }
