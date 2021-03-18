@@ -32,9 +32,4 @@
         </optgroup>
     </select>
     <IconsPanel panelCategory={categorySelector} searchTerm={searchTerm}/>
-    {#if categorySelector == 'all'}
-       {#if !searchTerm}
-          <button class="mt2">Load more...</button>
-       {/if}
-    {/if}
 </div>

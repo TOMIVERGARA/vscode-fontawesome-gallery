@@ -25,4 +25,11 @@
           <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
       {/each}
     </div>
+    {#if panelCategory == 'all'}
+       {#if !searchTerm}
+          <button on:click={() => {
+              list = List.loadMoreIcons();
+          }} class="mt2">Load more...</button>
+       {/if}
+    {/if}
 </div>

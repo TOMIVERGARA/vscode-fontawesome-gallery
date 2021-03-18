@@ -51,12 +51,18 @@ export default class IconList {
     public generateList(category: string){
         this.icons = [];
         if(category === "all"){
-            let counter: number = 0;
-            for(const icon in this.iconEntries){
-                if (counter > 92) return this.icons;
-                this.listFromEntry(icon);
-                counter++;
+            //Old generation method.
+            // for(const icon in this.iconEntries){
+            //     if (counter > 92) return this.icons;
+            //     this.listFromEntry(icon);
+            //     counter++;
+            // }
+            for (let i = 0; i < 100; i++) {
+                this.globalIdx = i;
+                const iconFromIndex = this.searchIndex[i];
+                this.listFromEntry(iconFromIndex.name);
             }
+            return this.icons
         }else{
            const iconsByCategory: CategoryEntry = getIconsByCategory(category);
            for(const icon of iconsByCategory.icons){
@@ -64,6 +70,16 @@ export default class IconList {
            }
            return this.icons
         }
+    }
+
+    public loadMoreIcons(){
+        const startPoint: number = this.globalIdx + 1;
+        for (let i = startPoint; i < startPoint + 100; i++) {
+            this.globalIdx = i;
+            const iconFromIndex = this.searchIndex[i];
+            this.listFromEntry(iconFromIndex.name);
+        }
+        return this.icons
     }
 
     public filterIcons(filter: string){
