@@ -42,7 +42,13 @@ export default class IconList {
     private search(filter: string){
         const results: SearchIndexEntry[] = this.searchIndex.filter(icon => {
             for(const searchTerm of icon.searchTerms){
-                return searchTerm.match(`^${filter}.*$`) || icon.label.toLowerCase().match(`^${filter}.*$`);
+                if(searchTerm.match(`^${filter}$`)){
+                  return true;
+                }else if(icon.label.toLowerCase().match(`^${filter}.*$`)){
+                  return true;
+                }
+                //Old Filter method
+                //return searchTerm.match(`^${filter}.*$`) || icon.label.toLowerCase().match(`^${filter}.*$`);
             }
         })
         return results;
