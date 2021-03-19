@@ -23,7 +23,7 @@
     <form>
        <input placeholder="Search icon..." bind:value={searchTerm} type="text">
     </form>
-    <select class="mb2" bind:value={categorySelector}>
+    <select class="mb2" on:focus={() => searchTerm = ''} bind:value={categorySelector}>
         <option value="all" selected>All</option>
         <optgroup label="Categories">
             {#each categoryList as category}
