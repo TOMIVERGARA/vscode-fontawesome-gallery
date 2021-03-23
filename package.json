@@ -1,7 +1,7 @@
 {
   "name": "vscode-fontawesome-gallery",
   "displayName": "Font Awesome Gallery",
-  "description": "Font Awesome gallery panel with icon images and names.",
+  "description": "VSCode Extension Sidebar Panel with a gallery view of FontAwesome's 5 free icons.",
   "version": "0.0.1",
   "repository": {
     "type": "git",
@@ -15,6 +15,7 @@
     "vscode": "^1.54.0"
   },
   "categories": [
+    "Visualization",
     "Other"
   ],
   "activationEvents": [
@@ -61,7 +62,7 @@
     "vscode:prepublish": "npm run package",
     "compile": "rollup -c && webpack --mode production",
     "watch": "concurrently \"rollup -c -w\" \"webpack --watch\"",
-    "package": "rollup -c && webpack --mode production --devtool hidden-source-map",
+    "package": "rollup -c  && webpack --mode production --devtool hidden-source-map",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
