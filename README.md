@@ -32,9 +32,9 @@ The extension is pretty easy to use and works as a sidebar panel:
 * The extension initially loads ~100 icons, to load more click the button at the end of the list.
 
 ## Changelog
-See [CHANGELOG.md]()
+See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/master/CHANGELOG.md)
 
 ## License
-See [LICENSE]()
+See [LICENSE](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/master/LICENCE)
 
 
