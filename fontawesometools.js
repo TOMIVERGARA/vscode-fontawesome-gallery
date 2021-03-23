@@ -1,6 +1,6 @@
 const fs = require('fs');
-var argv = require('minimist')(process.argv.slice(2));
 var figlet = require('figlet');
+var argv = require('minimist')(process.argv.slice(2));
 
 function createSearchIndexArrayFromIconsObj(iconsObjPath){
     try {
@@ -42,7 +42,7 @@ function createFormattedIconsFile(iconsObjPath){
         const IconsObject = {};
         for(const icon in iconsList){
             const entry = iconsList[icon];
-            const formattedName = `fag_${icon.replace('-', '_')}`;
+            const formattedName = `fag_${icon.replace(/-/ig, '_')}`;
             const formattedIconEntry = {
                 changes: entry.changes,
                 name: icon,
@@ -69,10 +69,12 @@ function createFormattedIconsFile(iconsObjPath){
 
 function printHelp(){
     console.log('\u001b[1;39mFontAwesome Tools is a CLI specifically designed to set up and update the VSCode Font Awesome Gallery extension. It can parse new icons.json files and much more. \u001b[0;39m \n');
-    console.log('Usage syntax:');
-    console.log(' -t csi, ijtc //Specifies the tool type. \n --path ./icons.json //Specifies the path to the icons.json file. \n -help, -h //Shows help menu.');
+    console.log('Usage:');
+    console.log('node fontawesometools.js [OPTIONS] \n');
+    console.log('Applications Options:');
+    console.log('  -t csi, ijtc          //Specifies the tool type. \n  -h, -help             //Shows help menu. \n  --path ./icons.json   //Specifies the path to the icons.json file. \n');
     console.log('Available Tools:');
-    console.log(' ---csi - Create Search Index // Creates json file containing an array of icons and their search terms.\n ---ijtc - Icons.json to const // Generates an icons.ts file that exports an iconsList var.')
+    console.log(' ---csi - Create Search Index      // Creates json file containing an array of icons and their search terms.\n ---cfi - Create Formatted Icons   // Generates an fagIcons.json file with the formatted icon list.')
 }
 
 (async function main(){

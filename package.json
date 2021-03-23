@@ -3,6 +3,14 @@
   "displayName": "Font Awesome Gallery",
   "description": "Font Awesome gallery panel with icon images and names.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "publisher": "tomasvergara",
+  "author": {
+    "name": "Tomas Vergara"
+  },
   "engines": {
     "vscode": "^1.54.0"
   },
@@ -51,9 +59,9 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "compile": "rollup -c && webpack",
+    "compile": "rollup -c && webpack --mode production",
     "watch": "concurrently \"rollup -c -w\" \"webpack --watch\"",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "package": "rollup -c && webpack --mode production --devtool hidden-source-map",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
@@ -75,7 +83,9 @@
     "autoprefixer": "^10.2.5",
     "concurrently": "^6.0.0",
     "eslint": "^7.19.0",
+    "figlet": "^1.5.0",
     "glob": "^7.1.6",
+    "minimist": "^1.2.5",
     "mocha": "^8.2.1",
     "postcss": "^8.2.8",
     "rollup": "^2.3.4",
@@ -92,8 +102,6 @@
     "webpack-cli": "^4.4.0"
   },
   "dependencies": {
-    "figlet": "^1.5.0",
-    "minimist": "^1.2.5",
     "svelte-clipboard": "^0.0.2"
   }
 }
