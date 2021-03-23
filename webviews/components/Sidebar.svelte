@@ -21,9 +21,9 @@
 
 <div>
     <form>
-       <input placeholder="Search icon..." bind:value={searchTerm} type="text">
+       <input role="searchbox" placeholder="Search icon..." bind:value={searchTerm} type="text">
     </form>
-    <select class="mb2" on:focus={() => searchTerm = ''} bind:value={categorySelector}>
+    <select role="option" class="mb2" on:focus={() => searchTerm = ''} bind:value={categorySelector}>
         <option value="all" selected>All</option>
         <optgroup label="Categories">
             {#each categoryList as category}

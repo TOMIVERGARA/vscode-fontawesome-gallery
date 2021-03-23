@@ -18,8 +18,8 @@
     let totalEntries = List.getTotal();
 </script>
 
-<div>
-    <span><small>Showing <b>{list.length}</b> of {totalEntries}</small></span><br>
+<div role="group">
+    <span role="contentinfo"><small>Showing <b>{list.length}</b> of {totalEntries}</small></span><br>
     <div class="mt1">
       {#each list as icon}
           <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>

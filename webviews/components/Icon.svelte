@@ -65,7 +65,7 @@ import { IconStyle } from "../services";
     })
   }}
 >
-  <div class="icon" title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`} on:click={copy}>
+  <div role="button" class="icon" title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`} on:click={copy}>
     <span class="inner">
       <i class={iconCode}></i>
       <div class="text-center name-container">
