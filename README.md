@@ -1,6 +1,8 @@
 # Font Awesome Gallery
 [![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-5.15.2%20Free-orange)](https://fontawesome.com/download)
 
+![Demo Image](/media/github/fag-demo.gif)
+
 VSCode Sidebar Panel with a gallery view of FontAwesome's 5 free icons.
 ## Features ✅
 * Icon search box to find icons by name or keyword.
@@ -11,8 +13,8 @@ VSCode Sidebar Panel with a gallery view of FontAwesome's 5 free icons.
 ## Installation 💾
 | Installation Type | Platform / Link |
 |-----------------------|----------------------|
-|[**VS Code**](https://code.visualstudio.com/)|[![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/Janne252.fontawesome-autocomplete?label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=Janne252.fontawesome-autocomplete)|
-|`.vsix` file|[![](https://img.shields.io/github/v/release/Janne252/vscode-fontawesome-auto-complete?label=Releases%20on%20GitHub)](https://github.com/Janne252/vscode-fontawesome-auto-complete/releases)|
+|[**VS Code**]|
+|`.vsix` file||
 
 ## Running locally 💻
 > ⚠️ Only recommended for development.
