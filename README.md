@@ -13,8 +13,8 @@ VSCode Sidebar Panel with a gallery view of FontAwesome's 5 free icons.
 ## Installation 💾
 | Installation Type | Platform / Link |
 |-----------------------|----------------------|
-|[**VS Code**]|
-|`.vsix` file||
+|[**VS Code**]|[![VSCode Marketplace](https://img.shields.io/badge/VSCode%20Marketplace-v0.0.1-orange)](https://marketplace.visualstudio.com/items?itemName=tomasvergara.vscode-fontawesome-gallery)|
+|`.vsix` file|[![Github Releases Download](https://img.shields.io/badge/Releases%20Github-v0.0.1-orange)](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/releases/tag/0.0.1)|
 
 ## Running locally 💻
 > ⚠️ Only recommended for development.
