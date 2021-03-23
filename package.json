@@ -20,7 +20,6 @@
   ],
   "activationEvents": [
     "onView:vscode-fontawesome-gallery-sidebar",
-    "onCommand:vscode-fontawesome-gallery.askQuestion",
     "onCommand:vscode-fontawesome-gallery.refresh"
   ],
   "main": "./dist/extension.js",
@@ -46,11 +45,6 @@
       ]
     },
     "commands": [
-      {
-        "command": "vscode-fontawesome-gallery.askQuestion",
-        "category": "Font Awesome Gallery",
-        "title": "Ask Question"
-      },
       {
         "command": "vscode-fontawesome-gallery.refresh",
         "category": "Font Awesome Gallery",

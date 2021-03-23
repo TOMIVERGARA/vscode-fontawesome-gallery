@@ -14,18 +14,6 @@ export function activate(context: vscode.ExtensionContext) {
 	  )
 	);
 
-	//TEST CODE
-	context.subscriptions.push(
-	  vscode.commands.registerCommand("vscode-fontawesome-gallery.askQuestion", async () => {
-	      const answer = await vscode.window.showInformationMessage('How was your day?', 'good', 'bad');
-
-		  if(answer === "bad"){
-			vscode.window.showInformationMessage('Im sorry!');
-		  }else{
-			vscode.window.showInformationMessage('Great!');
-		  }
-	  })
-	)
 
 	context.subscriptions.push(
 	  vscode.commands.registerCommand("vscode-fontawesome-gallery.refresh", async () => {
