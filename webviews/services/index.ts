@@ -27,6 +27,7 @@
  * in fontawesome/advanced-options/metadata/icons.json
  */
  export interface IconEntry {
+    name: string;
     changes: string[];
     ligatures?: any[];
     search: {

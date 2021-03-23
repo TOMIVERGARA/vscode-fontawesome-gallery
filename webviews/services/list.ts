@@ -1,4 +1,4 @@
-import { iconsList } from '../data/fontawesome-5/metadata/icons';
+import * as iconsList from '../data/fontawesome-5/metadata/fagIcons.json';
 import * as searchIndex from '../data/fontawesome-5/metadata/searchIndexArray.json'
 import Icon from './icon';
 import type { IconEntry, CategoryEntry } from '.';
@@ -30,10 +30,12 @@ export default class IconList {
     }
 
     private listFromEntry(icon: string){
-        const entry: IconEntry = this.iconEntries[icon];
+        const formattedIconName = `fag_${icon.replace(/-/ig, '_')}`;
+        console.log(formattedIconName)
+        const entry: IconEntry = this.iconEntries[formattedIconName];
         if(this.isIterable(entry.styles)){
             for(const style of entry.styles){
-                const iconObj = new Icon(icon, entry.label, style);
+                const iconObj = new Icon(entry.name, entry.label, style);
                 this.icons.push(iconObj);
             }
         }
