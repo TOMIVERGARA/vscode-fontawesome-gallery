@@ -31,7 +31,6 @@ export default class IconList {
 
     private listFromEntry(icon: string){
         const formattedIconName = `fag_${icon.replace(/-/ig, '_')}`;
-        console.log(formattedIconName)
         const entry: IconEntry = this.iconEntries[formattedIconName];
         if(this.isIterable(entry.styles)){
             for(const style of entry.styles){
