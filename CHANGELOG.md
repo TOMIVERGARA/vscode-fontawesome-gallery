@@ -1,4 +1,7 @@
 # Change Log
+## [0.0.2] - 2021-04-06
+- Minor Fixes
+
 ## [0.0.3] - 2021-04-06
 - Added List view mode 🤩
 - Improved responsiveness when updating sidebar size
