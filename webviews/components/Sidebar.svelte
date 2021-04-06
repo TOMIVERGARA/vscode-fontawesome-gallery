@@ -9,7 +9,7 @@
     //Input Values
     let searchTerm = '';
     let categorySelector = 'all';
-    let gridType = vscode.getState().gridType || 'grid';
+    let gridType = vscode.getState()?.gridType || 'grid';
 
     $: {
         vscode.setState({ gridType });
