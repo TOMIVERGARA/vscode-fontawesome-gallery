@@ -55,3 +55,5 @@ export interface CategoryEntry {
     icons: string[];
     label: string;
 }
+
+export const vscode = acquireVsCodeApi();

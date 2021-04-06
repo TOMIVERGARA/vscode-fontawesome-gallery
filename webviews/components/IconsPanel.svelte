@@ -1,10 +1,12 @@
 <script>
     import Icon from './Icon.svelte';
+    import ListIcon from './List.svelte';
     import IconList from '../services/list.ts';
 
     //Props
     export let panelCategory = 'all';
     export let searchTerm;
+    export let gridType = 'grid';
 
     //Fetch first ~100 icons.
     let List = new IconList();
@@ -22,7 +24,11 @@
     <span role="contentinfo"><small>Showing <b>{list.length}</b> of {totalEntries}</small></span><br>
     <div class="mt1">
       {#each list as icon}
-          <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
+         {#if gridType == 'grid'}
+             <Icon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
+         {:else}
+             <ListIcon iconCode={icon.iconCode} iconName={icon.iconName} iconLabel={icon.label} iconStyle={icon.styleName} iconStylePrefix={icon.style}/>
+         {/if}
       {/each}
     </div>
     {#if panelCategory == 'all'}

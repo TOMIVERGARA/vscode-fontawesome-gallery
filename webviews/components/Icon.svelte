@@ -1,6 +1,6 @@
 <script>
    import Clipboard from "svelte-clipboard";
-import { IconStyle } from "../services";
+   import { vscode } from '../services/index';
    export let iconCode;
    export let iconLabel;
    export let iconStyle;
@@ -39,7 +39,7 @@ import { IconStyle } from "../services";
 
    .icon .inner i {
        font-size: 15vw;
-       padding: 10px 10px 2px 10px;
+       padding: 10px 10px 3% 10px;
    }
 
    .icon .inner code {
@@ -57,7 +57,7 @@ import { IconStyle } from "../services";
   text={iconCode}
   let:copy
   on:copy={() => {
-    tsvscode.postMessage({
+    vscode.postMessage({
         command: 'onInfo',
         content: {
             message: 'The icon code has been copied...'
