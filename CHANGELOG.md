@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.0.5] - 2021-07-0
+## [0.0.5] - 2021-07-20
 
 - Added unicode code-point labels.
 - Added a command palette settings menu.
