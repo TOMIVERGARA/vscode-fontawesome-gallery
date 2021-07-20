@@ -21,7 +21,10 @@
   ],
   "activationEvents": [
     "onView:vscode-fontawesome-gallery-sidebar",
-    "onCommand:vscode-fontawesome-gallery.refresh"
+    "onCommand:vscode-fontawesome-gallery.refresh",
+    "onCommand:vscode-fontawesome-gallery.code-type-unicode",
+    "onCommand:vscode-fontawesome-gallery.code-type-classname",
+    "onCommand:vscode-fontawesome-gallery.toggle-grid-type"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -50,6 +53,21 @@
         "command": "vscode-fontawesome-gallery.refresh",
         "category": "Font Awesome Gallery",
         "title": "Refresh"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.code-type-unicode",
+        "category": "Font Awesome Gallery",
+        "title": "Set Icon labels to Unicode"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.code-type-classname",
+        "category": "Font Awesome Gallery",
+        "title": "Set Icon labels to Class Name"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.toggle-grid-type",
+        "category": "Font Awesome Gallery",
+        "title": "Toggle the Grid Type"
       }
     ]
   },
