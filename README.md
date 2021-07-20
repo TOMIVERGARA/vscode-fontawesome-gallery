@@ -10,12 +10,13 @@ VSCode Sidebar Panel with a gallery view of FontAwesome's 5 free icons.
 * Allows you to copy the icon code by clicking on any icon.
 * Detailed icon information on hover.
 * Grid or List view mode.
+* Select between the icon's class name or the unicode code-point.
 
 ## Installation 💾
 | Installation Type | Platform / Link |
 |-----------------------|----------------------|
-|[**VS Code**]|[![VSCode Marketplace](https://img.shields.io/badge/VSCode%20Marketplace-v0.0.4-orange)](https://marketplace.visualstudio.com/items?itemName=tomasvergara.vscode-fontawesome-gallery)|
-|`.vsix` file|[![Github Releases Download](https://img.shields.io/badge/Releases%20Github-v0.0.4-orange)](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/releases)|
+|[**VS Code**]|[![VSCode Marketplace](https://img.shields.io/badge/VSCode%20Marketplace-v0.0.5-orange)](https://marketplace.visualstudio.com/items?itemName=tomasvergara.vscode-fontawesome-gallery)|
+|`.vsix` file|[![Github Releases Download](https://img.shields.io/badge/Releases%20Github-v0.0.5-orange)](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/releases)|
 
 ## Running locally 💻
 > ⚠️ Only recommended for development.
@@ -31,6 +32,15 @@ The extension is pretty easy to use and works as a sidebar panel:
 * Search in the `Search icon` input to filter icons by name or related keyword.
 * Filter by category using the category selector.
 * The extension initially loads ~100 icons, to load more click the button at the end of the list.
+* Use the command palette's options to toggle between class name or unicode code-point.
+
+### Command Palette Options
+You can control most of the extension options from the command palette.
+* Use the `Toggle the Grid Type` command to change between the icons grid or icon list views.
+* Use the `Set Icon labels to Unicode` to change the labels and the copy feature to unicode code-points.
+* Use the `Set Icon labels to Class Name` to use the standard class name format.
+
+![Command Palette menu](media/github/fag-command-palette.png)
 
 ## Changelog
 See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/master/CHANGELOG.md)
