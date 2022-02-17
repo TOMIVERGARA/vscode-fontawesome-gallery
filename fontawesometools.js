@@ -14,7 +14,9 @@ function createSearchIndexArrayFromIconsObj(iconsObjPath) {
         const iconObj = {
           name: icon,
           label: entry.label,
-          searchTerms: entry.search.terms,
+          searchTerms: entry.search.terms.length
+            ? entry.search.terms
+            : [icon, entry.label],
         };
         console.log(`${icon} => ${entry.label}`);
         SearchIndexArray.push(iconObj);
@@ -61,7 +63,12 @@ function createFormattedIconsFile(iconsObjPath) {
         console.log(`${icon} => \u001b[1;32mReady! \u001b[0;39m`);
         IconsObject[formattedName] = formattedIconEntry;
         length++;
+
+        if (!IconsObject[formattedName].search.terms.length) {
+          IconsObject[formattedName].search.terms.push(icon, entry.label);
+        }
       }
+
       console.log(
         `\u001b[1;32mParsed and formatted ${length} icon entries successfuly. \u001b[0;39m`
       );
