@@ -116,6 +116,7 @@
     "webpack-cli": "^4.4.0"
   },
   "dependencies": {
+    "deep-equal": "^2.0.5",
     "svelte-clipboard": "^0.0.2"
   }
 }
