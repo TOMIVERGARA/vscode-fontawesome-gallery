@@ -47,6 +47,31 @@
     width: 32%;
   }
 
+  @media only screen and (max-width: 250px) {
+    .icon {
+      width: 49% !important;
+    }
+  }
+
+  @media only screen and (max-width: 215px) {
+    .icon {
+      width: 99% !important;
+    }
+
+    .icon .inner {
+      height: 100% !important;
+    }
+
+    .icon .inner i {
+      font-size: 20vw !important;
+      padding: 10px 10px 3% 10px !important;
+    }
+
+    .icon .inner code {
+      font-size: 4vw !important;
+    }
+  }
+
   .icon .inner:hover {
     background-color: var(--vscode-textSeparator-foreground);
   }
