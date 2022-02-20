@@ -32,7 +32,7 @@ function createSearchIndexArrayFromIconsObj(iconsObjPath) {
       return fs.writeFileSync("searchIndexArray.json", output);
     } else {
       return console.error(
-        "Could not locate the icons.json file in the specified path: " +
+        "Could not locate the fagIcons.json file in the specified path: " +
           iconsObjPath
       );
     }
@@ -143,12 +143,12 @@ function createFormattedIconsFileV6(allJsFile) {
         icons[style.key][icon];
 
       const formattedName = `fag_${icon.replace(/-/gi, "_")}`;
+      let formattedLabel = icon
+        .replace(/-/gi, " ")
+        .split(" ")
+        .map((word) => `${word.charAt(0).toUpperCase()}${word.substring(1)}`)
+        .join(" ");
       if (!(icon in IconsObject)) {
-        const formattedLabel = icon
-          .replace(/-/gi, " ")
-          .split(" ")
-          .map((word) => `${word.charAt(0).toUpperCase()}${word.substring(1)}`)
-          .join(" ");
         const formattedIconEntry = {
           changes: [],
           name: icon,
@@ -169,7 +169,7 @@ function createFormattedIconsFileV6(allJsFile) {
       }
       // Register search terms
       if (!IconsObject[formattedName].search.terms.includes(icon)) {
-        IconsObject[formattedName].search.terms.push(icon);
+        IconsObject[formattedName].search.terms.push(icon, formattedLabel);
       }
     }
   }
@@ -183,6 +183,44 @@ function createFormattedIconsFileV6(allJsFile) {
   );
 }
 
+//Migrates search terms from V5 to V6
+function migrateSearchTerms(searchIndexArrayV5, fagIconsV6) {
+  try {
+    if (fs.existsSync(searchIndexArrayV5) && fs.existsSync(fagIconsV6)) {
+      let rawSearchIndexData = fs.readFileSync(searchIndexArrayV5);
+      let searchIndexArrayObj = JSON.parse(rawSearchIndexData);
+      let rawFagIcons = fs.readFileSync(fagIconsV6);
+      let fagIcons = JSON.parse(rawFagIcons);
+      for (const icon of searchIndexArrayObj.searchIndexArray) {
+        const formattedName = `fag_${icon.name.replace(/-/gi, "_")}`;
+        //Check if icon exist in V6:
+        if (!fagIcons.hasOwnProperty(formattedName)) continue;
+        const originalTerms = fagIcons[formattedName].search.terms;
+        //Check if icon already has the same search terms
+        for (const termSI of icon.searchTerms) {
+          console.log(originalTerms);
+          if (deepEqual(fagIcons[formattedName].search.terms[0], termSI))
+            continue;
+          if (deepEqual(fagIcons[formattedName].search.terms[1], termSI))
+            continue;
+          fagIcons[formattedName].search.terms.push(termSI);
+        }
+      }
+      let output = JSON.stringify(fagIcons);
+      return fs.writeFileSync("fagIcons.json", output);
+    } else {
+      return console.error(
+        "Could not locate the fagIcons.json or the searchIndexArray v5 file in the specified paths: " +
+          fagIconsV6 +
+          " and " +
+          searchIndexArrayV5
+      );
+    }
+  } catch (err) {
+    return console.error("There was an error while saving the file.\n➥ " + err);
+  }
+}
+
 function printHelp() {
   console.log(
     "\u001b[1;39mFontAwesome Tools is a CLI specifically designed to set up and update the VSCode Font Awesome Gallery extension. It can parse new icons.json files and much more. \u001b[0;39m \n"
@@ -191,11 +229,11 @@ function printHelp() {
   console.log("node fontawesometools.js [OPTIONS] \n");
   console.log("Applications Options:");
   console.log(
-    "  -t csi, cfi, cfiV6          //Specifies the tool type. \n  -h, -help             //Shows help menu. \n  --path ./icons.json   //Specifies the path to the icons.json file. \n"
+    "  -t csi, cfi, cfiV6, mst          //Specifies the tool type. \n  -h, -help             //Shows help menu. \n  --path ./icons.json   //Specifies the path to the icons.json file. \n --path2  //Used to provide an extra path. \n"
   );
   console.log("Available Tools:");
   console.log(
-    " ---csi - Create Search Index      // Creates json file containing an array of icons and their search terms.\n ---cfi - Create Formatted Icons   // Generates an fagIcons.json file with the formatted icon list.\n ---cfiV6 - Create Formatted Icons for FA V6   // Generates an fagIcons.json file with the formatted icon list from all.js file, for FontAwesome 6."
+    " ---csi - Create Search Index      // Creates json file containing an array of icons and their search terms.\n ---cfi - Create Formatted Icons   // Generates an fagIcons.json file with the formatted icon list.\n ---cfiV6 - Create Formatted Icons for FA V6   // Generates an fagIcons.json file with the formatted icon list from all.js file, for FontAwesome 6.\n ---mst - Migrate search terms   //Migrates search terms from v5 to populate v6."
   );
 }
 
@@ -209,7 +247,7 @@ function printHelp() {
       case "csi":
         if (!argv.path)
           return console.log(
-            'You must specify an icons.json path using the "--path=" flag. \n\u001b[1;31mEarly exiting... \u001b[0;39m'
+            'You must specify an fagIcons.json path using the "--path=" flag. \n\u001b[1;31mEarly exiting... \u001b[0;39m'
           );
         console.log("Creating search index from icons object.");
         console.log("➥ icons.json path: " + argv.path);
@@ -232,6 +270,20 @@ function printHelp() {
         console.log("Creating formatted icons file from all.js file.");
         console.log("➥ all.js path: " + argv.path);
         setTimeout(() => createFormattedIconsFileV6(argv.path), 2000);
+        break;
+      case "mst":
+        if (!argv.path)
+          return console.log(
+            'You must specify a fagIcons.json file path using the "--path=" flag. \n\u001b[1;31mEarly exiting... \u001b[0;39m'
+          );
+        if (!argv.path2)
+          return console.log(
+            'You must specify a searchIndexArray.json file path using the "--path2=" flag. \n\u001b[1;31mEarly exiting... \u001b[0;39m'
+          );
+        console.log("Migrating search terms.");
+        console.log("➥ fagIcons.json path: " + argv.path);
+        console.log("➥ searchIndexArray.json path: " + argv.path2);
+        setTimeout(() => migrateSearchTerms(argv.path2, argv.path), 2000);
         break;
       default:
         printHelp();
