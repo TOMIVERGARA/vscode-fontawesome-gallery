@@ -24,6 +24,7 @@
     "onCommand:vscode-fontawesome-gallery.refresh",
     "onCommand:vscode-fontawesome-gallery.code-type-unicode",
     "onCommand:vscode-fontawesome-gallery.code-type-classname",
+    "onCommand:vscode-fontawesome-gallery.toggle-grid-type",
     "onCommand:vscode-fontawesome-gallery.toggle-grid-type"
   ],
   "main": "./dist/extension.js",
@@ -67,9 +68,41 @@
       {
         "command": "vscode-fontawesome-gallery.toggle-grid-type",
         "category": "Font Awesome Gallery",
-        "title": "Toggle the Grid Type"
+        "title": "Toggle Grid Type"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-5",
+        "title": "Switch to FA v5"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-6",
+        "title": "Switch to FA v6"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-5",
+          "when": "view == vscode-fontawesome-gallery-sidebar && vscode-fontawesome-gallery:isV6",
+          "group": "a@1"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-6",
+          "when": "view == vscode-fontawesome-gallery-sidebar && !vscode-fontawesome-gallery:isV6",
+          "group": "a@2"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.code-type-classname",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "b@1"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.code-type-unicode",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "b@2"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

@@ -14,6 +14,10 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  const setIsFaVersion6 = (isV6: boolean) => {
+    vscode.commands.executeCommand('setContext', 'vscode-fontawesome-gallery:isV6', isV6);
+  };
+
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "vscode-fontawesome-gallery.refresh",
@@ -54,6 +58,34 @@ export function activate(context: vscode.ExtensionContext) {
         });
         await vscode.window.showInformationMessage(
           "The icon label has ben changed to class name 🎉"
+        );
+      }
+    ),
+    vscode.commands.registerCommand(
+      "vscode-fontawesome-gallery.switch-version-5",
+      async () => {
+        if (!sidebarProvider) return;
+        sidebarProvider._view?.webview.postMessage({
+          command: "setFaVersion",
+          data: "v5",
+        });
+        setIsFaVersion6(false);
+        await vscode.window.showInformationMessage(
+          "Using FontAwesome 5 🎉"
+        );
+      }
+    ),
+    vscode.commands.registerCommand(
+      "vscode-fontawesome-gallery.switch-version-6",
+      async () => {
+        if (!sidebarProvider) return;
+        sidebarProvider._view?.webview.postMessage({
+          command: "setFaVersion",
+          data: "v6",
+        });
+        setIsFaVersion6(true);
+        await vscode.window.showInformationMessage(
+          "Using FontAwesome 6 🎉" 
         );
       }
     ),

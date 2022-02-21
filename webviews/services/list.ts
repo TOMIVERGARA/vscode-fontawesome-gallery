@@ -1,5 +1,7 @@
-import * as iconsList from "../data/fontawesome-5/metadata/fagIcons.json";
-import * as searchIndex from "../data/fontawesome-5/metadata/searchIndexArray.json";
+import * as iconsListV5 from "../data/fontawesome-5/metadata/fagIcons.json";
+import * as iconsListV6 from "../data/fontawesome-6/metadata/fagIcons.json";
+import * as searchIndexV5 from "../data/fontawesome-5/metadata/searchIndexArray.json";
+import * as searchIndexV6 from "../data/fontawesome-6/metadata/searchIndexArray.json";
 import Icon from "./icon";
 import type { IconEntry, CategoryEntry } from ".";
 import { getIconsByCategory } from "../services/common";
@@ -7,6 +9,7 @@ import { getIconsByCategory } from "../services/common";
 export interface IconEntryCollection {
   [key: string]: IconEntry;
 }
+
 export interface SearchIndexEntry {
   name: string;
   label: string;
@@ -14,16 +17,23 @@ export interface SearchIndexEntry {
 }
 
 export default class IconList {
+  public readonly faVersion: string;
   public readonly iconEntries: IconEntryCollection;
-  public readonly searchIndex =
-    searchIndex.searchIndexArray as SearchIndexEntry[];
+  public readonly searchIndex: SearchIndexEntry[];
   icons: Icon[];
   //Search Engine
   searchReturnLimit: number = 10; // Maximum number of results to return
   globalIdx: number = 0;
 
-  constructor() {
-    this.iconEntries = iconsList as IconEntryCollection;
+  constructor(faVersion: string) {
+    this.faVersion = faVersion;
+    this.searchIndex = searchIndexV6.searchIndexArray as SearchIndexEntry[]
+    this.iconEntries = iconsListV6 as IconEntryCollection;
+    if(faVersion === 'v5'){
+      this.searchIndex = searchIndexV5.searchIndexArray as SearchIndexEntry[]
+      this.iconEntries = iconsListV5 as IconEntryCollection;
+    }
+  
     this.icons = [];
   }
 

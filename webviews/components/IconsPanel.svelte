@@ -8,25 +8,33 @@
   export let searchTerm;
   export let gridType = "grid";
   export let labelType = "iconClassname";
+  export let faVersion;
 
   //Fetch first ~100 icons.
-  let List = new IconList();
-  $: list = List.generateList(panelCategory);
-  $: if (searchTerm) {
-    list = List.filterIcons(searchTerm);
-  } else {
-    list = List.generateList(panelCategory);
-  }
+  let IconListObj = new IconList(faVersion);
+  let iconList = IconListObj.generateList(panelCategory);
+  let totalEntries = IconListObj.getTotal();
+  $: {
+    IconListObj = new IconList(faVersion);
+    totalEntries = IconListObj.getTotal();
+    iconList = IconListObj.generateList(panelCategory);
 
-  let totalEntries = List.getTotal();
+    if (searchTerm) {
+      iconList = IconListObj.filterIcons(searchTerm);
+    } else {
+      iconList = IconListObj.generateList(panelCategory);
+    }
+  }
 </script>
 
 <div role="group">
   <span role="contentinfo"
-    ><small>Showing <b>{list.length}</b> of {totalEntries}</small></span
+    ><small
+      >Showing <b>{iconList.length}</b> of {totalEntries} - {faVersion}</small
+    ></span
   ><br />
   <div class="mt1">
-    {#each list as icon}
+    {#each iconList as icon}
       {#if gridType == "grid"}
         <Icon
           {labelType}
@@ -52,7 +60,7 @@
     {#if !searchTerm}
       <button
         on:click={() => {
-          list = List.loadMoreIcons();
+          iconList = IconListObj.loadMoreIcons();
         }}
         class="mt2">Load more...</button
       >

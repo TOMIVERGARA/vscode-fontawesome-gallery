@@ -4,17 +4,19 @@
   import { vscode } from "../services/index";
   import { onMount } from "svelte";
 
-  //Fetch Categories
-  let categoryList = getIconCategories();
-
   //Input Values
   let searchTerm = "";
   let categorySelector = "all";
   let gridType = vscode.getState()?.gridType || "grid";
   let labelType = "iconClassname";
+  let faVersion = vscode.getState()?.faVersion || "v6";
+  let categoryList = getIconCategories(faVersion);
 
   $: {
-    vscode.setState({ gridType });
+    vscode.setState({ gridType, faVersion });
+
+    //Fetch Categories
+    categoryList = getIconCategories(faVersion);
   }
 
   function toggleGridType() {
@@ -23,6 +25,10 @@
 
   function setLabelType(type) {
     labelType = type;
+  }
+
+  function setFaVersion(version) {
+    faVersion = version;
   }
 
   function messageManager(event) {
@@ -34,6 +40,9 @@
         break;
       case "toggleGridType":
         toggleGridType();
+        break;
+      case "setFaVersion":
+        setFaVersion(message.data);
         break;
       default:
         break;
@@ -79,10 +88,11 @@
     </button>
   </div>
   <IconsPanel
+    panelCategory={categorySelector}
     {gridType}
     {labelType}
-    panelCategory={categorySelector}
     {searchTerm}
+    {faVersion}
   />
 </div>
 

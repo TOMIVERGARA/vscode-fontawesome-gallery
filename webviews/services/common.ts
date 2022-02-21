@@ -1,15 +1,22 @@
-import * as categoryList from '../data/fontawesome-5/metadata/categories.json';
+import * as categoryListV5 from '../data/fontawesome-5/metadata/categories.json';
+import * as categoryListV6 from '../data/fontawesome-6/metadata/categories.json';
 import type { CategoryEntry } from ".";
 
 export interface CategoryCollection {[key: string]: CategoryEntry; }
 export interface FullCategory { name: string, label: string, icons: string[] }
 
-export function getIconCategories(){
+let categoryList: CategoryCollection;
+export function getIconCategories(faVersion: string){
+     if(faVersion === 'v6'){
+         categoryList = categoryListV6 as CategoryCollection;
+     }else if(faVersion === 'v5'){
+         categoryList = categoryListV5 as CategoryCollection;
+     }
+     
      const categories: FullCategory[] = [];
-     const CategoryList = categoryList as CategoryCollection
      for(const category in categoryList){
          if(category === "default") return categories;
-         const entry = CategoryList[category]
+         const entry = categoryList[category]
          categories.push({
              name: category,
              label: entry.label,
@@ -25,10 +32,9 @@ export function getIconsByCategory(target: string){
         icons: [],
         label: ''
     };
-    const CategoryList = categoryList as CategoryCollection
     for(const category in categoryList){
         if(category === target){
-            categoryIcons = CategoryList[category];
+            categoryIcons = categoryList[category];
             return categoryIcons;
         }
     }
