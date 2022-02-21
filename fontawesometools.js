@@ -11,12 +11,13 @@ function createSearchIndexArrayFromIconsObj(iconsObjPath) {
       const SearchIndexArray = [];
       for (const icon in iconsList) {
         const entry = iconsList[icon];
+        const iconName = icon.replace("fag_", "");
         const iconObj = {
-          name: icon,
+          name: iconName,
           label: entry.label,
           searchTerms: entry.search.terms.length
             ? entry.search.terms
-            : [icon, entry.label],
+            : [iconName, entry.label],
         };
         console.log(`${icon} => ${entry.label}`);
         SearchIndexArray.push(iconObj);
