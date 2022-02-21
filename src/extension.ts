@@ -14,8 +14,8 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
-  const setIsFaVersion6 = (isV6: boolean) => {
-    vscode.commands.executeCommand('setContext', 'vscode-fontawesome-gallery:isV6', isV6);
+  const setFaVersion = (faVersionN: number) => {
+    vscode.commands.executeCommand('setContext', 'vscode-fontawesome-gallery.faVersion', faVersionN);
   };
 
   context.subscriptions.push(
@@ -69,7 +69,7 @@ export function activate(context: vscode.ExtensionContext) {
           command: "setFaVersion",
           data: "v5",
         });
-        setIsFaVersion6(false);
+        setFaVersion(5);
         await vscode.window.showInformationMessage(
           "Using FontAwesome 5 🎉"
         );
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
           command: "setFaVersion",
           data: "v6",
         });
-        setIsFaVersion6(true);
+        setFaVersion(6);
         await vscode.window.showInformationMessage(
           "Using FontAwesome 6 🎉" 
         );
