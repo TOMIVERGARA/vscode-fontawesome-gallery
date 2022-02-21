@@ -1,8 +1,8 @@
 {
   "name": "vscode-fontawesome-gallery",
   "displayName": "Font Awesome Gallery",
-  "description": "VSCode Extension Sidebar Panel with a gallery view of FontAwesome's 5 free icons.",
-  "version": "0.0.5",
+  "description": "VSCode Extension Sidebar Panel with a gallery view of FontAwesome's 5/6 free icons.",
+  "version": "0.0.6",
   "repository": {
     "type": "git",
     "url": "https://github.com/TOMIVERGARA/vscode-fontawesome-gallery"
