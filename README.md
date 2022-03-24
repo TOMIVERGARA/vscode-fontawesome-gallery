@@ -58,7 +58,7 @@ You can control most of the extension options from the command palette.
 
 ## Changelog
 
-See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/deb/CHANGELOG.md)
+See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/dev/CHANGELOG.md)
 
 ## License
 
