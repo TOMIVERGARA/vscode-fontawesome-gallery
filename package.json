@@ -73,24 +73,24 @@
       {
         "command": "vscode-fontawesome-gallery.switch-version-5",
         "category": "Font Awesome Gallery",
-        "title": "Switch to FA v5"
+        "title": "Use FA v5"
       },
       {
         "command": "vscode-fontawesome-gallery.switch-version-6",
         "category": "Font Awesome Gallery",
-        "title": "Switch to FA v6"
+        "title": "Use FA v6"
       }
     ],
     "menus": {
       "view/title": [
         {
           "command": "vscode-fontawesome-gallery.switch-version-5",
-          "when": "view == vscode-fontawesome-gallery-sidebar && vscode-fontawesome-gallery.faVersion == 6 || !vscode-fontawesome-gallery.faVersion",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
           "group": "a@1"
         },
         {
           "command": "vscode-fontawesome-gallery.switch-version-6",
-          "when": "view == vscode-fontawesome-gallery-sidebar && vscode-fontawesome-gallery.faVersion == 5",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
           "group": "a@2"
         },
         {
