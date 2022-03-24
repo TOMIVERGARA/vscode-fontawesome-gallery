@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.0.7] - 2022-03-24
+
+- Added support for Font Awesome 6.1.0.
+- Solved error with sidebar menu appearing on all sidebars.
+
 ## [0.0.6] - 2022-02-21
 
 - Added support for Font Awesome 6.

@@ -234,7 +234,7 @@ function printHelp() {
   );
   console.log("Available Tools:");
   console.log(
-    " ---csi - Create Search Index      // Creates json file containing an array of icons and their search terms.\n ---cfi - Create Formatted Icons   // Generates an fagIcons.json file with the formatted icon list.\n ---cfiV6 - Create Formatted Icons for FA V6   // Generates an fagIcons.json file with the formatted icon list from all.js file, for FontAwesome 6.\n ---mst - Migrate search terms   //Migrates search terms from v5 to populate v6."
+    " ---csi - Create Search Index      // Creates json file containing an array of icons and their search terms.\n ---cfi - Create Formatted Icons   // Generates a fagIcons.json file with the formatted icon list.\n ---cfiV6 - Create Formatted Icons for FA V6   // Generates an fagIcons.json file with the formatted icon list from all.js file, for FontAwesome 6.\n ---mst - Migrate search terms   //Migrates search terms from v5 to populate v6."
   );
 }
 

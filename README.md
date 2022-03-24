@@ -1,7 +1,7 @@
 # Font Awesome Gallery
 
 [![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-5.15.4%20Free-orange)](https://fontawesome.com/download)
-[![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-6.0.0%20Free-blue)](https://fontawesome.com/download)
+[![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-6.1.0%20Free-blue)](https://fontawesome.com/download)
 
 ![Demo Image](/media/github/fag-demo.gif)
 
@@ -20,8 +20,8 @@ VSCode Sidebar Panel with a gallery view of FontAwesome's 5/6 free icons.
 
 | Installation Type | Platform / Link                                                                                                                                                                       |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **VS Code**]      | [![VSCode Marketplace](https://img.shields.io/badge/VSCode%20Marketplace-v0.0.6-orange)](https://marketplace.visualstudio.com/items?itemName=tomasvergara.vscode-fontawesome-gallery) |
-| `.vsix` file      | [![Github Releases Download](https://img.shields.io/badge/Releases%20Github-v0.0.6-orange)](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/releases)                       |
+| **VS Code**]      | [![VSCode Marketplace](https://img.shields.io/badge/VSCode%20Marketplace-v0.0.7-orange)](https://marketplace.visualstudio.com/items?itemName=tomasvergara.vscode-fontawesome-gallery) |
+| `.vsix` file      | [![Github Releases Download](https://img.shields.io/badge/Releases%20Github-v0.0.7-orange)](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/releases)                       |
 
 ## Running locally 💻
 
@@ -51,15 +51,15 @@ You can control most of the extension options from the command palette.
 - Use the `Toggle the Grid Type` command to change between the icons grid or icon list views.
 - Use the `Set Icon labels to Unicode` command to change the labels and the copy feature to unicode code-points.
 - Use the `Set Icon labels to Class Name` command to use the standard class name format.
-- Use the `Switch to FA 5` command to use Font Awesome 5.
-- Use the `Switch to FA 6` command to use Font Awesome 6.
+- Use the `Use FA 5` command to use Font Awesome 5.
+- Use the `Use FA 6` command to use Font Awesome 6.
 
 ![Command Palette menu](media/github/fag-command-palette.png)
 
 ## Changelog
 
-See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/master/CHANGELOG.md)
+See [CHANGELOG.md](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/deb/CHANGELOG.md)
 
 ## License
 
-See [LICENSE](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/master/LICENCE)
+See [LICENSE](https://github.com/TOMIVERGARA/vscode-fontawesome-gallery/blob/dev/LICENCE)
