@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.0.8] - 2022-07-29
+
+- Updated to Font Awesome 6.1.2.
+- Changed the icons class names to the new V6 format when using this version.
+  - `fas` => `fa-solid`
+  - `far` => `fa-regular`
+  - `fab` => `fa-brands`
+-
+
 ## [0.0.7] - 2022-03-24
 
 - Added support for Font Awesome 6.1.0.

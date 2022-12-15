@@ -9,7 +9,6 @@
   export let gridType = "grid";
   export let labelType = "iconClassname";
   export let faVersion;
-
   //Fetch first ~100 icons.
   let IconListObj = new IconList(faVersion);
   let iconList = IconListObj.generateList(panelCategory);
@@ -38,7 +37,7 @@
       {#if gridType == "grid"}
         <Icon
           {labelType}
-          iconCode={icon.iconCode}
+          iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
           iconLabel={icon.label}
           iconStyle={icon.styleName}
@@ -47,7 +46,7 @@
       {:else}
         <ListIcon
           {labelType}
-          iconCode={icon.iconCode}
+          iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
           iconLabel={icon.label}
           iconStyle={icon.styleName}

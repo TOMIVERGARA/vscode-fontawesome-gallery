@@ -17,6 +17,7 @@ export default class Icon {
   public readonly styleName: string;
   public readonly prefix: string;
   public readonly iconCode: string;
+  public readonly iconCodeV6: string
 
   constructor(name: string, unicode: string, label: string, style: IconStyle) {
     this.name = name;
@@ -26,5 +27,6 @@ export default class Icon {
     this.style = iconStylePrefix[style];
     this.prefix = prefix;
     this.iconCode = `${this.style} ${this.prefix}${this.name}`;
+    this.iconCodeV6 = `${this.prefix}${this.styleName} ${this.prefix}${this.name}`;
   }
 }
