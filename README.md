@@ -1,11 +1,11 @@
 # Font Awesome Gallery
 
-[![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-5.15.4%20Free-orange)](https://fontawesome.com/download)
-[![FontAwesome Free Version](https://img.shields.io/badge/Font%20Awesome%20Version-6.1.0%20Free-blue)](https://fontawesome.com/download)
+[![FontAwesome Pro Version](https://img.shields.io/badge/Font%20Awesome%20Version-5.15.4%20Pro-orange)](https://fontawesome.com/download)
+[![FontAwesome Pro Version](https://img.shields.io/badge/Font%20Awesome%20Version-6.1.0%20Pro-blue)](https://fontawesome.com/download)
 
 ![Demo Image](/media/github/fag-demo.gif)
 
-VSCode Sidebar Panel with a gallery view of FontAwesome's 5/6 free icons.
+VSCode Sidebar Panel with a gallery view of FontAwesome's 5/6 Pro icons.
 
 ## Features ✅
 
