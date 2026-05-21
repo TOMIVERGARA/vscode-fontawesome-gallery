@@ -8,12 +8,12 @@
   let searchTerm = "";
   let categorySelector = "all";
   let gridType = vscode.getState()?.gridType || "grid";
-  let labelType = "iconClassname";
-  let faVersion = vscode.getState()?.faVersion || "v6";
+  let labelType = vscode.getState()?.labelType || window.defaultLabelType;
+  let faVersion = vscode.getState()?.faVersion || window.defaultFaVersion;
   let categoryList = getIconCategories(faVersion);
 
   $: {
-    vscode.setState({ gridType, faVersion });
+    vscode.setState({ gridType, faVersion, labelType });
 
     //Fetch Categories
     categoryList = getIconCategories(faVersion);
