@@ -37,19 +37,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       }
     });
 
-    vscode.workspace.onDidChangeConfiguration(e => {
+    const configListener = vscode.workspace.onDidChangeConfiguration(e => {
       if (
         e.affectsConfiguration('vscode-fontawesome-gallery.defaultLabelType') ||
         e.affectsConfiguration('vscode-fontawesome-gallery.defaultFaVersion')
       ) {
         const cfg = vscode.workspace.getConfiguration('vscode-fontawesome-gallery');
-        webviewView.webview.html = this._getHtmlForWebview(
-          webviewView.webview,
-          cfg.get<string>('defaultLabelType', 'iconClassname'),
-          cfg.get<string>('defaultFaVersion', 'v6')
-        );
+        webviewView.webview.postMessage({
+          command: 'updateDefaults',
+          defaultLabelType: cfg.get<string>('defaultLabelType', 'iconClassname'),
+          defaultFaVersion: cfg.get<string>('defaultFaVersion', 'v6'),
+        });
       }
     });
+    webviewView.onDidDispose(() => configListener.dispose());
   }
 
   public revive(panel: vscode.WebviewView) {

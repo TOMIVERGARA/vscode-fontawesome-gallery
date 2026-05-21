@@ -44,6 +44,10 @@
       case "setFaVersion":
         setFaVersion(message.data);
         break;
+      case "updateDefaults":
+        window.defaultLabelType = message.defaultLabelType;
+        window.defaultFaVersion = message.defaultFaVersion;
+        break;
       default:
         break;
     }
