@@ -16,7 +16,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    const config = vscode.workspace.getConfiguration('vscode-fontawesome-gallery');
+    const defaultLabelType = config.get<string>('defaultLabelType', 'iconClassname');
+    const defaultFaVersion = config.get<string>('defaultFaVersion', 'v6');
+
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, defaultLabelType, defaultFaVersion);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.command) {
@@ -38,7 +42,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     this._view = panel;
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview) {
+  private _getHtmlForWebview(webview: vscode.Webview, defaultLabelType: string, defaultFaVersion: string) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
     );
@@ -80,6 +84,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           <link href="${fontawesomeV6CssUri}" rel="stylesheet">
 	  	</head>
         <body>
+           <script nonce="${nonce}">
+             window.defaultLabelType = ${JSON.stringify(defaultLabelType)};
+             window.defaultFaVersion = ${JSON.stringify(defaultFaVersion)};
+           </script>
            <script nonce="${nonce}" src="${scriptUri}"></script>
 	  	</body>
 	  </html>`;
