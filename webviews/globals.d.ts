@@ -9,6 +9,9 @@ declare global {
         getState: () => any;
         setState: (state: any) => void;
     }
+
+    var defaultLabelType: string;
+    var defaultFaVersion: string;
 }
 
 export {};

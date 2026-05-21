@@ -104,6 +104,31 @@
           "group": "b@2"
         }
       ]
+    },
+    "configuration": {
+      "title": "Font Awesome Gallery",
+      "properties": {
+        "vscode-fontawesome-gallery.defaultLabelType": {
+          "type": "string",
+          "enum": ["iconClassname", "iconUnicode"],
+          "enumDescriptions": [
+            "Show the icon class name (e.g. fa-house)",
+            "Show the icon unicode value (e.g. \\uf015)"
+          ],
+          "default": "iconClassname",
+          "description": "Default label type shown on icons. Can be overridden per-session using the sidebar menu buttons."
+        },
+        "vscode-fontawesome-gallery.defaultFaVersion": {
+          "type": "string",
+          "enum": ["v5", "v6"],
+          "enumDescriptions": [
+            "Font Awesome 5",
+            "Font Awesome 6"
+          ],
+          "default": "v6",
+          "description": "Default Font Awesome version to use. Can be overridden per-session using the sidebar menu buttons."
+        }
+      }
     }
   },
   "scripts": {
