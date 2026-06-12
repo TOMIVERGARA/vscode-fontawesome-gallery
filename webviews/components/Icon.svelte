@@ -1,5 +1,4 @@
 <script>
-  import Clipboard from "svelte-clipboard";
   import { vscode } from "../services/index";
   export let labelType = "iconClassname";
   export let iconCode;
@@ -7,38 +6,35 @@
   export let iconLabel;
   export let iconStyle;
   export let iconStylePrefix;
+
+  function copyToClipboard() {
+    const text = labelType === "iconClassname" ? iconCode : iconUnicode;
+    navigator.clipboard.writeText(text).then(() => {
+      vscode.postMessage({
+        command: "onInfo",
+        content: { message: "The icon code has been copied..." },
+      });
+    });
+  }
 </script>
 
-<Clipboard
-  text={labelType === "iconClassname" ? iconCode : iconUnicode}
-  let:copy
-  on:copy={() => {
-    vscode.postMessage({
-      command: "onInfo",
-      content: {
-        message: "The icon code has been copied...",
-      },
-    });
-  }}
+<div
+  role="button"
+  class="icon"
+  title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
+  on:click={copyToClipboard}
 >
-  <div
-    role="button"
-    class="icon"
-    title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
-    on:click={copy}
-  >
-    <span class="inner">
-      <i class={iconCode} />
-      <div class="text-center name-container">
-        {#if labelType === "iconClassname"}
-          <code>{iconCode}</code>
-        {:else if labelType === "iconUnicode"}
-          <code>{iconUnicode}</code>
-        {/if}
-      </div>
-    </span>
-  </div>
-</Clipboard>
+  <span class="inner">
+    <i class={iconCode} />
+    <div class="text-center name-container">
+      {#if labelType === "iconClassname"}
+        <code>{iconCode}</code>
+      {:else if labelType === "iconUnicode"}
+        <code>{iconUnicode}</code>
+      {/if}
+    </div>
+  </span>
+</div>
 
 <style>
   .icon {
