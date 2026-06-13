@@ -54,34 +54,36 @@
 <style>
   .icon {
     display: inline-block;
-    margin-bottom: 5px;
-    width: 32%;
+    width: 31%;
+    margin: 0 1% 4px;
   }
 
   @media only screen and (max-width: 250px) {
     .icon {
-      width: 49% !important;
+      width: 48%;
+      margin: 0 1% 4px;
     }
   }
 
   @media only screen and (max-width: 215px) {
     .icon {
-      width: 99% !important;
+      width: 98%;
+      margin: 0 1% 4px;
     }
 
     .icon .inner {
-      height: 100% !important;
+      height: 100%;
     }
 
     .icon .inner i,
     .icon .inner svg {
-      font-size: 20vw !important;
-      height: 20vw !important;
-      padding: 10px 10px 3% 10px !important;
+      font-size: 20vw;
+      height: 20vw;
+      padding: 10px 10px 3% 10px;
     }
 
     .icon .inner code {
-      font-size: 4vw !important;
+      font-size: 4vw;
     }
   }
 
