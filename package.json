@@ -84,6 +84,46 @@
         "command": "vscode-fontawesome-gallery.switch-version-7",
         "category": "Font Awesome Gallery",
         "title": "Use FA v7"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-click-copy",
+        "category": "Font Awesome Gallery",
+        "title": "Copy"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-click-insert",
+        "category": "Font Awesome Gallery",
+        "title": "Insert at cursor"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-classname",
+        "category": "Font Awesome Gallery",
+        "title": "Class name"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-html",
+        "category": "Font Awesome Gallery",
+        "title": "HTML tag"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-unicode",
+        "category": "Font Awesome Gallery",
+        "title": "Unicode"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-vue",
+        "category": "Font Awesome Gallery",
+        "title": "Vue array"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "vscode-fontawesome-gallery.clickBehavior",
+        "label": "On Click Behavior"
+      },
+      {
+        "id": "vscode-fontawesome-gallery.copyContent",
+        "label": "Copy Content"
       }
     ],
     "menus": {
@@ -112,6 +152,50 @@
           "command": "vscode-fontawesome-gallery.code-type-unicode",
           "when": "view == vscode-fontawesome-gallery-sidebar",
           "group": "b@2"
+        },
+        {
+          "submenu": "vscode-fontawesome-gallery.clickBehavior",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "c@1"
+        },
+        {
+          "submenu": "vscode-fontawesome-gallery.copyContent",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "c@2"
+        }
+      ],
+      "vscode-fontawesome-gallery.clickBehavior": [
+        {
+          "command": "vscode-fontawesome-gallery.set-click-copy",
+          "group": "1@1",
+          "toggled": "vscode-fontawesome-gallery.clickBehavior == 'copy'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-click-insert",
+          "group": "1@2",
+          "toggled": "vscode-fontawesome-gallery.clickBehavior == 'insert'"
+        }
+      ],
+      "vscode-fontawesome-gallery.copyContent": [
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-classname",
+          "group": "1@1",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'classname'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-html",
+          "group": "1@2",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'html'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-unicode",
+          "group": "1@3",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'unicode'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-vue",
+          "group": "1@4",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'vue'"
         }
       ]
     }

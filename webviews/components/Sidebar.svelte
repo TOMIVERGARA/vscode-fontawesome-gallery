@@ -3,16 +3,43 @@
   import { getIconCategories } from "../services/common";
   import { vscode } from "../services/index";
 
+  const savedState = vscode.getState() ?? {};
   let searchTerm = $state("");
   let categorySelector = $state("all");
-  let gridType = $state<string>(vscode.getState()?.gridType || "grid");
-  let labelType = $state("iconClassname");
-  let faVersion = $state<string>(vscode.getState()?.faVersion || "v6");
+  let gridType = $state<string>(savedState.gridType || "grid");
+  let labelType = $state<string>(savedState.labelType || "iconClassname");
+  let clickBehavior = $state<string>(savedState.clickBehavior || "copy");
+  let copyContent = $state<string>(savedState.copyContent || "classname");
+  let faVersion = $state<string>(savedState.faVersion || "v6");
 
   let categoryList = $derived(getIconCategories(faVersion));
 
+  const clickBehaviorLabel: Record<string, string> = {
+    copy: "Copy",
+    insert: "Insert",
+  };
+  const copyContentLabel: Record<string, string> = {
+    classname: "Classname",
+    html: "HTML Tag",
+    unicode: "Unicode",
+    vue: "Vue Array",
+  };
+
+  let behaviorLabel = $derived(clickBehaviorLabel[clickBehavior] ?? clickBehavior);
+  let contentLabel = $derived(copyContentLabel[copyContent] ?? copyContent);
+
+  // Persist session state and notify extension to update globalState
   $effect(() => {
-    vscode.setState({ gridType, faVersion });
+    vscode.setState({ gridType, faVersion, labelType, clickBehavior, copyContent });
+    vscode.postMessage({
+      command: "state-update",
+      content: { gridType, faVersion, labelType, clickBehavior, copyContent },
+    });
+  });
+
+  // Notify extension that webview is ready to receive initial state
+  $effect(() => {
+    vscode.postMessage({ command: "ready" });
   });
 
   function toggleGridType() {
@@ -27,9 +54,24 @@
     faVersion = version;
   }
 
+  function setClickBehavior(behavior: string) {
+    clickBehavior = behavior;
+  }
+
+  function setCopyContent(content: string) {
+    copyContent = content;
+  }
+
   function messageManager(event: MessageEvent) {
     const message = event.data;
     switch (message.command) {
+      case "setInitialState":
+        gridType = message.data.gridType ?? gridType;
+        faVersion = message.data.faVersion ?? faVersion;
+        labelType = message.data.labelType ?? labelType;
+        clickBehavior = message.data.clickBehavior ?? clickBehavior;
+        copyContent = message.data.copyContent ?? copyContent;
+        break;
       case "setLabelType":
         setLabelType(message.data);
         break;
@@ -38,6 +80,12 @@
         break;
       case "setFaVersion":
         setFaVersion(message.data);
+        break;
+      case "setClickBehavior":
+        setClickBehavior(message.data);
+        break;
+      case "setCopyContent":
+        setCopyContent(message.data);
         break;
     }
   }
@@ -78,10 +126,16 @@
       {/if}
     </button>
   </div>
+  <div class="click-mode">
+    <span class="chip">{behaviorLabel}</span>
+    <span class="chip">{contentLabel}</span>
+  </div>
   <IconsPanel
     panelCategory={categorySelector}
     {gridType}
     {labelType}
+    {clickBehavior}
+    {copyContent}
     {searchTerm}
     {faVersion}
   />
@@ -108,5 +162,19 @@
     width: 33px;
     margin-left: 4px;
     margin-bottom: 1rem;
+  }
+
+  .click-mode {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+  }
+
+  .chip {
+    font-size: 10px;
+    padding: 1px 6px;
+    background: var(--vscode-badge-background);
+    color: var(--vscode-badge-foreground);
+    opacity: 0.75;
   }
 </style>

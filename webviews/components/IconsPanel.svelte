@@ -9,6 +9,8 @@
     searchTerm: string;
     gridType?: string;
     labelType?: string;
+    clickBehavior?: string;
+    copyContent?: string;
     faVersion: string;
   }
 
@@ -17,6 +19,8 @@
     searchTerm,
     gridType = "grid",
     labelType = "iconClassname",
+    clickBehavior = "copy",
+    copyContent = "classname",
     faVersion,
   }: Props = $props();
 
@@ -45,6 +49,8 @@
       {#if gridType == "grid"}
         <Icon
           {labelType}
+          {clickBehavior}
+          {copyContent}
           {faVersion}
           iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
@@ -58,6 +64,8 @@
       {:else}
         <ListIcon
           {labelType}
+          {clickBehavior}
+          {copyContent}
           {faVersion}
           iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
@@ -84,6 +92,8 @@
 <style>
   .icons-grid {
     margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .load-more {

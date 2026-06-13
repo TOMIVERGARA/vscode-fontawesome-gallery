@@ -1,8 +1,11 @@
 <script lang="ts">
   import { vscode } from "../services/index";
+  import ContextMenu, { type MenuAction } from "./ContextMenu.svelte";
 
   interface Props {
     labelType?: string;
+    clickBehavior?: string;
+    copyContent?: string;
     iconCode: string;
     iconUnicode: string;
     iconLabel: string;
@@ -16,6 +19,8 @@
 
   let {
     labelType = "iconClassname",
+    clickBehavior = "copy",
+    copyContent = "classname",
     iconCode,
     iconUnicode,
     iconLabel,
@@ -27,24 +32,97 @@
     svgHeight = 512,
   }: Props = $props();
 
-  function copyToClipboard() {
-    const text = labelType === "iconClassname" ? iconCode : iconUnicode;
+  let menuOpen = $state(false);
+  let menuX = $state(0);
+  let menuY = $state(0);
+
+  function copyText(text: string, label = "Copied to clipboard!") {
     navigator.clipboard.writeText(text).then(() => {
-      vscode.postMessage({
-        command: "onInfo",
-        content: { message: "The icon code has been copied..." },
-      });
+      vscode.postMessage({ command: "onInfo", content: { message: label } });
     });
   }
+
+  function getContent(): string {
+    switch (copyContent) {
+      case "html": return `<i class="${iconCode}"></i>`;
+      case "unicode": return iconUnicode;
+      case "vue": return `['${iconStylePrefix}', '${iconLabel}']`;
+      default: return iconCode;
+    }
+  }
+
+  function getContentLabel(): string {
+    switch (copyContent) {
+      case "html": return "HTML tag copied!";
+      case "unicode": return "Unicode copied!";
+      case "vue": return "Vue array copied!";
+      default: return "Class name copied!";
+    }
+  }
+
+  function insertAtCursor() {
+    vscode.postMessage({
+      command: "insert-at-cursor",
+      content: { text: getContent() },
+    });
+  }
+
+  function handlePrimaryClick() {
+    if (clickBehavior === "insert") {
+      insertAtCursor();
+    } else {
+      copyText(getContent(), getContentLabel());
+    }
+  }
+
+  function openContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    menuX = e.clientX;
+    menuY = e.clientY;
+    menuOpen = true;
+  }
+
+  function getContextActions(): MenuAction[] {
+    return [
+      {
+        label: "Copy class name",
+        action: () => copyText(iconCode, "Class name copied!"),
+      },
+      {
+        label: "Copy HTML tag",
+        action: () =>
+          copyText(`<i class="${iconCode}"></i>`, "HTML tag copied!"),
+      },
+      {
+        label: "Copy Vue array",
+        action: () =>
+          copyText(`['${iconStylePrefix}', '${iconLabel}']`, "Vue array copied!"),
+      },
+      {
+        label: "Insert at cursor",
+        action: insertAtCursor,
+      },
+    ];
+  }
 </script>
+
+{#if menuOpen}
+  <ContextMenu
+    x={menuX}
+    y={menuY}
+    actions={getContextActions()}
+    onclose={() => (menuOpen = false)}
+  />
+{/if}
 
 <div
   role="button"
   tabindex="0"
   class="icon"
   title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
-  onclick={copyToClipboard}
-  onkeydown={(e) => e.key === "Enter" && copyToClipboard()}
+  onclick={handlePrimaryClick}
+  oncontextmenu={openContextMenu}
+  onkeydown={(e) => e.key === "Enter" && handlePrimaryClick()}
 >
   <span class="inner">
     {#if faVersion !== "v5" && svgPath}
@@ -113,6 +191,7 @@
     display: inline-block;
     text-align: center;
     width: 100%;
+    overflow: hidden;
     background-color: var(--vscode-input-background);
     box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
     transition: all 0.3s ease-in-out;
@@ -144,6 +223,9 @@
   .icon .inner code {
     font-size: 3vw;
     white-space: nowrap;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-width: 100%;
     padding: 2px;
     border-radius: 3px;
