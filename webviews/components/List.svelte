@@ -47,7 +47,7 @@
   onkeydown={(e) => e.key === "Enter" && copyToClipboard()}
 >
   <span class="inner">
-    <div class="icon-container col col-2 ml1">
+    <div class="icon-container">
       {#if faVersion !== "v5" && svgPath}
         <svg
           viewBox="0 0 {svgWidth} {svgHeight}"
@@ -61,7 +61,7 @@
         <i class={iconCode}></i>
       {/if}
     </div>
-    <div class="name-container col col-10">
+    <div class="name-container">
       {#if labelType === "iconClassname"}
         <code>{iconCode}</code>
       {:else if labelType === "iconUnicode"}
@@ -119,9 +119,15 @@
   }
 
   .listItem .icon-container {
+    width: 16.6667%;
+    margin-left: 0.5rem;
     margin-top: auto;
     margin-bottom: auto;
     text-align: center;
     flex-shrink: 0;
+  }
+
+  .listItem .name-container {
+    width: 83.3333%;
   }
 </style>

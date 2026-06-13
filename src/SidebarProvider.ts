@@ -51,10 +51,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const styleVSCodeUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css")
     );
-    const styleBassCssUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "media", "basscss.min.css")
-    );
-
     // FA v5 CSS (webfont-based, also used for UI toggle icons)
     const fontawesomeV5CssUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "webviews", "data/fontawesome-5/css/all.min.css")
@@ -72,7 +68,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 	  	    <link href="${styleResetUri}" rel="stylesheet">
 	  	    <link href="${styleVSCodeUri}" rel="stylesheet">
           <link href="${styleMainUri}" rel="stylesheet">
-          <link href="${styleBassCssUri}" rel="stylesheet">
           <link href="${fontawesomeV5CssUri}" rel="stylesheet">
 	  	</head>
         <body>

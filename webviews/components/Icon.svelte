@@ -59,7 +59,7 @@
     {:else}
       <i class={iconCode}></i>
     {/if}
-    <div class="text-center name-container">
+    <div class="name-container">
       {#if labelType === "iconClassname"}
         <code>{iconCode}</code>
       {:else if labelType === "iconUnicode"}

@@ -59,7 +59,7 @@
   </form>
   <div class="menu-group">
     <select
-      class="mb2"
+      class="category-select"
       onfocus={() => (searchTerm = "")}
       bind:value={categorySelector}
     >
@@ -70,7 +70,7 @@
         {/each}
       </optgroup>
     </select>
-    <button class="menu-button mb2" onclick={toggleGridType}>
+    <button class="menu-button" onclick={toggleGridType}>
       {#if gridType == "list"}
         <i class="fas fa-th-large"></i>
       {:else}
@@ -91,8 +91,13 @@
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
+    appearance: none;
     text-indent: 1px;
     text-overflow: "";
+  }
+
+  .category-select {
+    margin-bottom: 1rem;
   }
 
   .menu-group {
@@ -102,5 +107,6 @@
   .menu-group .menu-button {
     width: 33px;
     margin-left: 4px;
+    margin-bottom: 1rem;
   }
 </style>

@@ -40,7 +40,7 @@
   <span role="contentinfo">
     <small>Showing <b>{iconList.length}</b> of {totalEntries} — {faVersion}</small>
   </span><br />
-  <div class="mt1">
+  <div class="icons-grid">
     {#each iconList as icon}
       {#if gridType == "grid"}
         <Icon
@@ -76,7 +76,17 @@
       onclick={() => {
         if (iconListObj) iconList = iconListObj.loadMoreIcons();
       }}
-      class="mt2">Load more...</button
+      class="load-more">Load more...</button
     >
   {/if}
 </div>
+
+<style>
+  .icons-grid {
+    margin-top: 0.5rem;
+  }
+
+  .load-more {
+    margin-top: 1rem;
+  }
+</style>
