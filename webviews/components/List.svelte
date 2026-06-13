@@ -1,15 +1,31 @@
-<script>
+<script lang="ts">
   import { vscode } from "../services/index";
-  export let labelType = "iconClassname";
-  export let iconCode;
-  export let iconUnicode;
-  export let iconLabel;
-  export let iconStyle;
-  export let iconStylePrefix;
-  export let faVersion = "v6";
-  export let svgPath = "";
-  export let svgWidth = 512;
-  export let svgHeight = 512;
+
+  interface Props {
+    labelType?: string;
+    iconCode: string;
+    iconUnicode: string;
+    iconLabel: string;
+    iconStyle: string;
+    iconStylePrefix: string;
+    faVersion?: string;
+    svgPath?: string;
+    svgWidth?: number;
+    svgHeight?: number;
+  }
+
+  let {
+    labelType = "iconClassname",
+    iconCode,
+    iconUnicode,
+    iconLabel,
+    iconStyle,
+    iconStylePrefix,
+    faVersion = "v6",
+    svgPath = "",
+    svgWidth = 512,
+    svgHeight = 512,
+  }: Props = $props();
 
   function copyToClipboard() {
     const text = labelType === "iconClassname" ? iconCode : iconUnicode;
@@ -24,9 +40,11 @@
 
 <div
   role="button"
+  tabindex="0"
   class="listItem"
   title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
-  on:click={copyToClipboard}
+  onclick={copyToClipboard}
+  onkeydown={(e) => e.key === "Enter" && copyToClipboard()}
 >
   <span class="inner">
     <div class="icon-container col col-2 ml1">
@@ -40,7 +58,7 @@
           <path d={svgPath} />
         </svg>
       {:else}
-        <i class={iconCode} />
+        <i class={iconCode}></i>
       {/if}
     </div>
     <div class="name-container col col-10">

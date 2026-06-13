@@ -1,39 +1,34 @@
-<script>
+<script lang="ts">
   import IconsPanel from "./IconsPanel.svelte";
   import { getIconCategories } from "../services/common";
   import { vscode } from "../services/index";
-  import { onMount } from "svelte";
 
-  //Input Values
-  let searchTerm = "";
-  let categorySelector = "all";
-  let gridType = vscode.getState()?.gridType || "grid";
-  let labelType = "iconClassname";
-  let faVersion = vscode.getState()?.faVersion || "v6";
-  let categoryList = getIconCategories(faVersion);
+  let searchTerm = $state("");
+  let categorySelector = $state("all");
+  let gridType = $state<string>(vscode.getState()?.gridType || "grid");
+  let labelType = $state("iconClassname");
+  let faVersion = $state<string>(vscode.getState()?.faVersion || "v6");
 
-  $: {
+  let categoryList = $derived(getIconCategories(faVersion));
+
+  $effect(() => {
     vscode.setState({ gridType, faVersion });
-
-    //Fetch Categories
-    categoryList = getIconCategories(faVersion);
-  }
+  });
 
   function toggleGridType() {
-    gridType = gridType == "grid" ? (gridType = "list") : (gridType = "grid");
+    gridType = gridType === "grid" ? "list" : "grid";
   }
 
-  function setLabelType(type) {
+  function setLabelType(type: string) {
     labelType = type;
   }
 
-  function setFaVersion(version) {
+  function setFaVersion(version: string) {
     faVersion = version;
   }
 
-  function messageManager(event) {
+  function messageManager(event: MessageEvent) {
     const message = event.data;
-
     switch (message.command) {
       case "setLabelType":
         setLabelType(message.data);
@@ -44,15 +39,12 @@
       case "setFaVersion":
         setFaVersion(message.data);
         break;
-      default:
-        break;
     }
   }
 
-  onMount(async () => {
-    window.addEventListener("message", (event) => {
-      messageManager(event);
-    });
+  $effect(() => {
+    window.addEventListener("message", messageManager);
+    return () => window.removeEventListener("message", messageManager);
   });
 </script>
 
@@ -67,9 +59,8 @@
   </form>
   <div class="menu-group">
     <select
-      role="option"
       class="mb2"
-      on:focus={() => (searchTerm = "")}
+      onfocus={() => (searchTerm = "")}
       bind:value={categorySelector}
     >
       <option value="all" selected>All</option>
@@ -79,11 +70,11 @@
         {/each}
       </optgroup>
     </select>
-    <button class="menu-button mb2" on:click={toggleGridType}>
+    <button class="menu-button mb2" onclick={toggleGridType}>
       {#if gridType == "list"}
-        <i class="fas fa-th-large" />
+        <i class="fas fa-th-large"></i>
       {:else}
-        <i class="fas fa-bars" />
+        <i class="fas fa-bars"></i>
       {/if}
     </button>
   </div>

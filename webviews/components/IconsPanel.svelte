@@ -1,28 +1,39 @@
-<script>
+<script lang="ts">
   import Icon from "./Icon.svelte";
   import ListIcon from "./List.svelte";
   import IconList from "../services/list.ts";
+  import type IconModel from "../services/icon";
 
-  export let panelCategory = "all";
-  export let searchTerm;
-  export let gridType = "grid";
-  export let labelType = "iconClassname";
-  export let faVersion;
-
-  let IconListObj = new IconList(faVersion);
-  let iconList = IconListObj.generateList(panelCategory);
-  let totalEntries = IconListObj.getTotal();
-
-  $: {
-    IconListObj = new IconList(faVersion);
-    totalEntries = IconListObj.getTotal();
-
-    if (searchTerm) {
-      iconList = IconListObj.filterIcons(searchTerm);
-    } else {
-      iconList = IconListObj.generateList(panelCategory);
-    }
+  interface Props {
+    panelCategory?: string;
+    searchTerm: string;
+    gridType?: string;
+    labelType?: string;
+    faVersion: string;
   }
+
+  let {
+    panelCategory = "all",
+    searchTerm,
+    gridType = "grid",
+    labelType = "iconClassname",
+    faVersion,
+  }: Props = $props();
+
+  let iconListObj = $state<IconList | null>(null);
+  let iconList = $state<IconModel[]>([]);
+  let totalEntries = $state(0);
+
+  $effect(() => {
+    const obj = new IconList(faVersion);
+    iconListObj = obj;
+    totalEntries = obj.getTotal();
+    if (searchTerm) {
+      iconList = obj.filterIcons(searchTerm);
+    } else {
+      iconList = obj.generateList(panelCategory);
+    }
+  });
 </script>
 
 <div role="group">
@@ -62,8 +73,8 @@
   </div>
   {#if panelCategory == "all" && !searchTerm}
     <button
-      on:click={() => {
-        iconList = IconListObj.loadMoreIcons();
+      onclick={() => {
+        if (iconListObj) iconList = iconListObj.loadMoreIcons();
       }}
       class="mt2">Load more...</button
     >
