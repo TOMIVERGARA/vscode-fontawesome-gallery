@@ -55,12 +55,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, "media", "basscss.min.css")
     );
 
-    //FontAwesome Lib
+    // FA v5 CSS (webfont-based, also used for UI toggle icons)
     const fontawesomeV5CssUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "webviews", "data/fontawesome-5/css/all.min.css")
-    );
-    const fontawesomeV6CssUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "webviews", "data/fontawesome-6/css/all.min.css")
     );
 
     // Use a nonce to only allow a specific script to be run.
@@ -77,7 +74,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           <link href="${styleMainUri}" rel="stylesheet">
           <link href="${styleBassCssUri}" rel="stylesheet">
           <link href="${fontawesomeV5CssUri}" rel="stylesheet">
-          <link href="${fontawesomeV6CssUri}" rel="stylesheet">
 	  	</head>
         <body>
            <script nonce="${nonce}" src="${scriptUri}"></script>

@@ -85,7 +85,21 @@ export function activate(context: vscode.ExtensionContext) {
         });
         setFaVersion(6);
         await vscode.window.showInformationMessage(
-          "Using FontAwesome 6 🎉" 
+          "Using FontAwesome 6 🎉"
+        );
+      }
+    ),
+    vscode.commands.registerCommand(
+      "vscode-fontawesome-gallery.switch-version-7",
+      async () => {
+        if (!sidebarProvider) return;
+        sidebarProvider._view?.webview.postMessage({
+          command: "setFaVersion",
+          data: "v7",
+        });
+        setFaVersion(7);
+        await vscode.window.showInformationMessage(
+          "Using FontAwesome 7 🎉"
         );
       }
     ),

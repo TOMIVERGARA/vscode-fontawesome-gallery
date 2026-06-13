@@ -79,6 +79,11 @@
         "command": "vscode-fontawesome-gallery.switch-version-6",
         "category": "Font Awesome Gallery",
         "title": "Use FA v6"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-7",
+        "category": "Font Awesome Gallery",
+        "title": "Use FA v7"
       }
     ],
     "menus": {
@@ -92,6 +97,11 @@
           "command": "vscode-fontawesome-gallery.switch-version-6",
           "when": "view == vscode-fontawesome-gallery-sidebar",
           "group": "a@2"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-7",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "a@3"
         },
         {
           "command": "vscode-fontawesome-gallery.code-type-classname",
@@ -111,6 +121,7 @@
     "compile": "node build.js",
     "watch": "node build.js --watch",
     "package": "node build.js --production",
+    "build:icons": "node scripts/build-icons.js",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
@@ -118,23 +129,23 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "@types/mocha": "^10.0.0",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "@vscode/test-electron": "^2.4.0",
     "esbuild": "^0.24.0",
     "esbuild-svelte": "^0.8.2",
     "eslint": "^9.0.0",
-    "figlet": "^1.5.0",
+    "fa-free-v6": "npm:@fortawesome/fontawesome-free@^6.7.2",
     "glob": "^11.0.0",
-    "minimist": "^1.2.5",
+    "js-yaml": "^4.2.0",
     "mocha": "^10.0.0",
     "svelte": "^3.59.2",
     "svelte-check": "^2.10.3",
     "svelte-preprocess": "^5.1.4",
     "typescript": "^5.0.0"
-  },
-  "dependencies": {}
+  }
 }

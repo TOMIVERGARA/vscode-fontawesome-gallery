@@ -1,59 +1,63 @@
-/**
- * Available FontAwesome icon styles.
- * @see https://fontawesome.com/how-to-use
- */
- export enum IconStyle {
-    solid = 'solid',
-    regular = 'regular',
-    light = 'light',
-    brands = 'brands',
-    duotone = 'duotone'
+export enum IconStyle {
+  solid = "solid",
+  regular = "regular",
+  brands = "brands",
 }
 
-/**
- * Available FontAwesome icon style prefixes.
- * @see https://fontawesome.com/how-to-use
- */
- export const iconStylePrefix: {[style in IconStyle]: string} =  {
-    [IconStyle.solid]: 'fas',
-    [IconStyle.regular]: 'far',
-    [IconStyle.light]: 'fal',
-    [IconStyle.brands]: 'fab',
-    [IconStyle.duotone]: 'fad'
+export const iconStylePrefix: { [style in IconStyle]: string } = {
+  [IconStyle.solid]: "fas",
+  [IconStyle.regular]: "far",
+  [IconStyle.brands]: "fab",
 };
 
-/**
- * Represents the stucture of an icon entry
- * in fontawesome/advanced-options/metadata/icons.json
- */
- export interface IconEntry {
-    name: string;
-    changes: string[];
-    ligatures?: any[];
-    search: {
-        terms: string[];
-    };
-    styles: IconStyle[];
-    unicode: string;
-    label: string;
+export const iconStyleClassV6: { [style in IconStyle]: string } = {
+  [IconStyle.solid]: "fa-solid",
+  [IconStyle.regular]: "fa-regular",
+  [IconStyle.brands]: "fa-brands",
+};
+
+export const prefix = "fa-";
+
+// ---- New unified icon data format (v6/v7) ----
+
+export interface SvgData {
+  path: string;
+  width: number;
+  height: number;
 }
 
-export interface IconEntrySvg {
-    last_modified: number;
-    raw: string;
-    viewBox: [string, string, string, string];
-    width: number;
-    height: number;
-    path: string;
+export interface IconEntry {
+  label: string;
+  unicode: string;
+  styles: string[];
+  searchTerms: string[];
+  svg: {
+    solid?: SvgData;
+    regular?: SvgData;
+    brands?: SvgData;
+  };
 }
 
-export const availablePrefixes = Object.keys(iconStylePrefix).map(key => iconStylePrefix[key as IconStyle]);
-export const availableStyleNames = Object.values(IconStyle);
-export const prefix = 'fa-';
+export interface IconCollection {
+  metadata: { version: string; generatedAt: string };
+  icons: { [name: string]: IconEntry };
+  categories: { [key: string]: CategoryEntry };
+}
 
 export interface CategoryEntry {
-    icons: string[];
-    label: string;
+  label: string;
+  icons: string[];
+}
+
+// ---- Legacy v5 types (kept for backward compatibility) ----
+
+export interface IconEntryV5 {
+  name: string;
+  changes: string[];
+  search: { terms: string[] };
+  styles: string[];
+  unicode: string;
+  label: string;
 }
 
 export const vscode = acquireVsCodeApi();

@@ -6,6 +6,10 @@
   export let iconLabel;
   export let iconStyle;
   export let iconStylePrefix;
+  export let faVersion = "v6";
+  export let svgPath = "";
+  export let svgWidth = 512;
+  export let svgHeight = 512;
 
   function copyToClipboard() {
     const text = labelType === "iconClassname" ? iconCode : iconUnicode;
@@ -25,7 +29,20 @@
   on:click={copyToClipboard}
 >
   <span class="inner">
-    <div class="icon-container col col-2 ml1"><i class={iconCode} /></div>
+    <div class="icon-container col col-2 ml1">
+      {#if faVersion !== "v5" && svgPath}
+        <svg
+          viewBox="0 0 {svgWidth} {svgHeight}"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d={svgPath} />
+        </svg>
+      {:else}
+        <i class={iconCode} />
+      {/if}
+    </div>
     <div class="name-container col col-10">
       {#if labelType === "iconClassname"}
         <code>{iconCode}</code>
@@ -57,18 +74,21 @@
 
   .listItem .inner .name-container {
     margin: 0px 5px 0px 5px;
-    overflow: scroll;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     margin-top: auto;
     margin-bottom: auto;
   }
 
-  .listItem .inner .name-container::-webkit-scrollbar {
-    display: none;
-  }
-
   .listItem .inner i {
     font-size: 10vw;
-    /* padding: 10px 10px 2px 10px; */
+  }
+
+  .listItem .inner svg {
+    height: 10vw;
+    width: auto;
+    max-width: 100%;
   }
 
   .listItem .inner code {
@@ -84,5 +104,6 @@
     margin-top: auto;
     margin-bottom: auto;
     text-align: center;
+    flex-shrink: 0;
   }
 </style>
