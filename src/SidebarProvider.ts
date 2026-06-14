@@ -25,19 +25,47 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           const copyContent = this._context.globalState.get<string>("fa-gallery.copyContent", "classname");
           const gridType = this._context.globalState.get<string>("fa-gallery.gridType", "grid");
           const faVersion = this._context.globalState.get<string>("fa-gallery.faVersion", "v6");
+          const iconSize = this._context.globalState.get<number>("fa-gallery.iconSize", 1);
+          const favorites = this._context.globalState.get<string[]>("fa-gallery.favorites", []);
+          const recents = this._context.globalState.get<string[]>("fa-gallery.recents", []);
           webviewView.webview.postMessage({
             command: "setInitialState",
-            data: { labelType, clickBehavior, copyContent, gridType, faVersion },
+            data: { labelType, clickBehavior, copyContent, gridType, faVersion, iconSize, favorites, recents },
           });
           break;
         }
         case "state-update": {
-          const { gridType, faVersion, labelType, clickBehavior, copyContent } = data.content ?? {};
+          const { gridType, faVersion, labelType, clickBehavior, copyContent, iconSize } = data.content ?? {};
           if (gridType !== undefined) {this._context.globalState.update("fa-gallery.gridType", gridType);}
           if (faVersion !== undefined) {this._context.globalState.update("fa-gallery.faVersion", faVersion);}
           if (labelType !== undefined) {this._context.globalState.update("fa-gallery.labelType", labelType);}
           if (clickBehavior !== undefined) {this._context.globalState.update("fa-gallery.clickBehavior", clickBehavior);}
           if (copyContent !== undefined) {this._context.globalState.update("fa-gallery.copyContent", copyContent);}
+          if (iconSize !== undefined) {this._context.globalState.update("fa-gallery.iconSize", iconSize);}
+          break;
+        }
+        case "toggle-favorite": {
+          const key = data.content?.key as string;
+          if (!key) break;
+          const favs = this._context.globalState.get<string[]>("fa-gallery.favorites", []);
+          const idx = favs.indexOf(key);
+          const updated = idx === -1 ? [...favs, key] : favs.filter((_, i) => i !== idx);
+          this._context.globalState.update("fa-gallery.favorites", updated);
+          webviewView.webview.postMessage({ command: "favoritesUpdated", data: updated });
+          break;
+        }
+        case "log-recent": {
+          const key = data.content?.key as string;
+          if (!key) break;
+          const recents = this._context.globalState.get<string[]>("fa-gallery.recents", []);
+          const updated = [key, ...recents.filter((k) => k !== key)].slice(0, 20);
+          this._context.globalState.update("fa-gallery.recents", updated);
+          webviewView.webview.postMessage({ command: "recentsUpdated", data: updated });
+          break;
+        }
+        case "open-external": {
+          const url = data.content?.url as string;
+          if (url) {vscode.env.openExternal(vscode.Uri.parse(url));}
           break;
         }
         case "insert-at-cursor": {
@@ -92,6 +120,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     const nonce = getNonce();
 
+    // Cache-busting: VS Code caches linked webview resources by URI, so after a
+    // rebuild the new Sidebar.js (with a fresh Svelte scope hash) can be paired
+    // with a stale cached Sidebar.css, breaking scoped style matching. A unique
+    // query per HTML render forces both compiled assets to be refetched together.
+    const cacheBust = `?v=${nonce}`;
+
     return `<!DOCTYPE html>
 	  <html lang="en">
 	  	<head>
@@ -100,11 +134,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 	  	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  	    <link href="${styleResetUri}" rel="stylesheet">
 	  	    <link href="${styleVSCodeUri}" rel="stylesheet">
-          <link href="${styleMainUri}" rel="stylesheet">
+          <link href="${styleMainUri}${cacheBust}" rel="stylesheet">
           <link href="${fontawesomeV5CssUri}" rel="stylesheet">
 	  	</head>
         <body>
-           <script nonce="${nonce}" src="${scriptUri}"></script>
+           <script nonce="${nonce}" src="${scriptUri}${cacheBust}"></script>
 	  	</body>
 	  </html>`;
   }

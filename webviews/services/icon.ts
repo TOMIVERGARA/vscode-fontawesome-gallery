@@ -20,6 +20,8 @@ export default class Icon {
   public readonly svgPath?: string;
   public readonly svgWidth?: number;
   public readonly svgHeight?: number;
+  /** FA version when this icon was first introduced (e.g. "6.4.0") */
+  public readonly addedIn?: string;
 
   constructor(
     name: string,
@@ -27,7 +29,8 @@ export default class Icon {
     label: string,
     style: string,
     svg?: SvgData,
-    allStyles?: string[]
+    allStyles?: string[],
+    addedIn?: string | null
   ) {
     this.name = name;
     this.unicode = unicode;
@@ -43,5 +46,6 @@ export default class Icon {
       this.svgWidth = svg.width;
       this.svgHeight = svg.height;
     }
+    if (addedIn) this.addedIn = addedIn;
   }
 }

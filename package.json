@@ -114,6 +114,16 @@
         "command": "vscode-fontawesome-gallery.set-copy-content-vue",
         "category": "Font Awesome Gallery",
         "title": "Vue array"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-react",
+        "category": "Font Awesome Gallery",
+        "title": "React JSX"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-svg",
+        "category": "Font Awesome Gallery",
+        "title": "SVG inline"
       }
     ],
     "submenus": [
@@ -196,6 +206,16 @@
           "command": "vscode-fontawesome-gallery.set-copy-content-vue",
           "group": "1@4",
           "toggled": "vscode-fontawesome-gallery.copyContent == 'vue'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-react",
+          "group": "1@5",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'react'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-svg",
+          "group": "1@6",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'svg'"
         }
       ]
     }

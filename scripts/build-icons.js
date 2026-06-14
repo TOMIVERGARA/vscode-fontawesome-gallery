@@ -91,6 +91,7 @@ function buildIconsJson(version) {
       styles: freeStyles,
       searchTerms,
       svg: svgs,
+      added_in: data.changes?.[0] ?? null,
     };
   }
 

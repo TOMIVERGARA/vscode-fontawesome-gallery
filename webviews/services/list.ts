@@ -75,9 +75,23 @@ export default class IconList {
     if (!entry?.styles) return;
     for (const style of entry.styles) {
       this.icons.push(
-        new Icon(iconName, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles)
+        new Icon(iconName, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles, entry.added_in ?? undefined)
       );
     }
+  }
+
+  public getIconByKey(key: string): Icon | null {
+    const [name, style] = key.split(":");
+    if (!name || !style) return null;
+    if (this.faVersion === "v5") {
+      const v5key = `fag_${name.replace(/-/g, "_")}`;
+      const entry = this.iconEntriesV5[v5key];
+      if (!entry) return null;
+      return new Icon(entry.name, entry.unicode, entry.label, style, undefined, entry.styles);
+    }
+    const entry = this.iconCollection?.icons[name];
+    if (!entry) return null;
+    return new Icon(name, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles, entry.added_in ?? undefined);
   }
 
   // ---- Search (v6/v7) ----

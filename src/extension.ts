@@ -117,6 +117,24 @@ export function activate(context: vscode.ExtensionContext) {
       }
     ),
     vscode.commands.registerCommand(
+      "vscode-fontawesome-gallery.set-copy-content-react",
+      async () => {
+        if (!sidebarProvider) {return;}
+        postToWebview({ command: "setCopyContent", data: "react" });
+        context.globalState.update("fa-gallery.copyContent", "react");
+        vscode.commands.executeCommand("setContext", "vscode-fontawesome-gallery.copyContent", "react");
+      }
+    ),
+    vscode.commands.registerCommand(
+      "vscode-fontawesome-gallery.set-copy-content-svg",
+      async () => {
+        if (!sidebarProvider) {return;}
+        postToWebview({ command: "setCopyContent", data: "svg" });
+        context.globalState.update("fa-gallery.copyContent", "svg");
+        vscode.commands.executeCommand("setContext", "vscode-fontawesome-gallery.copyContent", "svg");
+      }
+    ),
+    vscode.commands.registerCommand(
       "vscode-fontawesome-gallery.switch-version-5",
       async () => {
         if (!sidebarProvider) {return;}

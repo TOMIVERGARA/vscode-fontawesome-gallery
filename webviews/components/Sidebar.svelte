@@ -11,6 +11,9 @@
   let clickBehavior = $state<string>(savedState.clickBehavior || "copy");
   let copyContent = $state<string>(savedState.copyContent || "classname");
   let faVersion = $state<string>(savedState.faVersion || "v6");
+  let iconSize = $state<number>(savedState.iconSize ?? 1);
+  let favorites = $state<string[]>([]);
+  let recents = $state<string[]>([]);
 
   let categoryList = $derived(getIconCategories(faVersion));
 
@@ -23,6 +26,8 @@
     html: "HTML Tag",
     unicode: "Unicode",
     vue: "Vue Array",
+    react: "React JSX",
+    svg: "SVG",
   };
 
   let behaviorLabel = $derived(clickBehaviorLabel[clickBehavior] ?? clickBehavior);
@@ -30,10 +35,10 @@
 
   // Persist session state and notify extension to update globalState
   $effect(() => {
-    vscode.setState({ gridType, faVersion, labelType, clickBehavior, copyContent });
+    vscode.setState({ gridType, faVersion, labelType, clickBehavior, copyContent, iconSize });
     vscode.postMessage({
       command: "state-update",
-      content: { gridType, faVersion, labelType, clickBehavior, copyContent },
+      content: { gridType, faVersion, labelType, clickBehavior, copyContent, iconSize },
     });
   });
 
@@ -46,22 +51,6 @@
     gridType = gridType === "grid" ? "list" : "grid";
   }
 
-  function setLabelType(type: string) {
-    labelType = type;
-  }
-
-  function setFaVersion(version: string) {
-    faVersion = version;
-  }
-
-  function setClickBehavior(behavior: string) {
-    clickBehavior = behavior;
-  }
-
-  function setCopyContent(content: string) {
-    copyContent = content;
-  }
-
   function messageManager(event: MessageEvent) {
     const message = event.data;
     switch (message.command) {
@@ -71,21 +60,30 @@
         labelType = message.data.labelType ?? labelType;
         clickBehavior = message.data.clickBehavior ?? clickBehavior;
         copyContent = message.data.copyContent ?? copyContent;
+        iconSize = message.data.iconSize ?? iconSize;
+        favorites = message.data.favorites ?? [];
+        recents = message.data.recents ?? [];
         break;
       case "setLabelType":
-        setLabelType(message.data);
+        labelType = message.data;
         break;
       case "toggleGridType":
         toggleGridType();
         break;
       case "setFaVersion":
-        setFaVersion(message.data);
+        faVersion = message.data;
         break;
       case "setClickBehavior":
-        setClickBehavior(message.data);
+        clickBehavior = message.data;
         break;
       case "setCopyContent":
-        setCopyContent(message.data);
+        copyContent = message.data;
+        break;
+      case "favoritesUpdated":
+        favorites = message.data ?? [];
+        break;
+      case "recentsUpdated":
+        recents = message.data ?? [];
         break;
     }
   }
@@ -112,12 +110,28 @@
       bind:value={categorySelector}
     >
       <option value="all" selected>All</option>
+      {#if favorites.length > 0}
+        <option value="favorites">Favorites ({favorites.length})</option>
+      {/if}
+      {#if recents.length > 0}
+        <option value="recents">Recent ({recents.length})</option>
+      {/if}
       <optgroup label="Categories">
         {#each categoryList as category}
           <option value={category.name}>{category.label}</option>
         {/each}
       </optgroup>
     </select>
+    <button
+      class="menu-button"
+      title="Smaller icons"
+      onclick={() => { iconSize = Math.max(0.6, parseFloat((iconSize - 0.2).toFixed(1))); }}
+    >A-</button>
+    <button
+      class="menu-button"
+      title="Larger icons"
+      onclick={() => { iconSize = Math.min(2, parseFloat((iconSize + 0.2).toFixed(1))); }}
+    >A+</button>
     <button class="menu-button" onclick={toggleGridType}>
       {#if gridType == "list"}
         <i class="fas fa-th-large"></i>
@@ -131,6 +145,11 @@
     <span class="chip">{behaviorLabel}</span>
     <span class="chip">{contentLabel}</span>
   </div>
+  {#if faVersion === "v5"}
+    <div class="deprecation-banner">
+      ⚠ Font Awesome 5 is no longer maintained. Consider upgrading to v6 or v7.
+    </div>
+  {/if}
   <IconsPanel
     panelCategory={categorySelector}
     {gridType}
@@ -139,6 +158,9 @@
     {copyContent}
     {searchTerm}
     {faVersion}
+    {iconSize}
+    {favorites}
+    {recents}
   />
 </div>
 
@@ -183,5 +205,15 @@
     background: var(--vscode-badge-background);
     color: var(--vscode-badge-foreground);
     opacity: 0.75;
+  }
+
+  .deprecation-banner {
+    font-size: 11px;
+    padding: 6px 8px;
+    background: var(--vscode-inputValidation-warningBackground, #4d3800);
+    color: var(--vscode-inputValidation-warningForeground, #cca700);
+    border: 1px solid var(--vscode-inputValidation-warningBorder, #b89500);
+    border-radius: 2px;
+    margin-bottom: 8px;
   }
 </style>

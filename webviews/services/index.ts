@@ -36,6 +36,7 @@ export interface IconEntry {
     regular?: SvgData;
     brands?: SvgData;
   };
+  added_in?: string | null;
 }
 
 export interface IconCollection {
