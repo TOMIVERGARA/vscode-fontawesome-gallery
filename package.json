@@ -1,8 +1,8 @@
 {
   "name": "vscode-fontawesome-gallery",
   "displayName": "Font Awesome Gallery",
-  "description": "VSCode Extension Sidebar Panel with a gallery view of FontAwesome's 5 free icons.",
-  "version": "0.0.2",
+  "description": "VSCode Extension Sidebar Panel with a gallery view of FontAwesome's 5/6 free icons.",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/TOMIVERGARA/vscode-fontawesome-gallery"
@@ -13,7 +13,7 @@
     "name": "Tomas Vergara"
   },
   "engines": {
-    "vscode": "^1.54.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Visualization",
@@ -21,7 +21,11 @@
   ],
   "activationEvents": [
     "onView:vscode-fontawesome-gallery-sidebar",
-    "onCommand:vscode-fontawesome-gallery.refresh"
+    "onCommand:vscode-fontawesome-gallery.refresh",
+    "onCommand:vscode-fontawesome-gallery.code-type-unicode",
+    "onCommand:vscode-fontawesome-gallery.code-type-classname",
+    "onCommand:vscode-fontawesome-gallery.toggle-grid-type",
+    "onCommand:vscode-fontawesome-gallery.toggle-grid-type"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -50,54 +54,201 @@
         "command": "vscode-fontawesome-gallery.refresh",
         "category": "Font Awesome Gallery",
         "title": "Refresh"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.code-type-unicode",
+        "category": "Font Awesome Gallery",
+        "title": "Set Icon labels to Unicode"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.code-type-classname",
+        "category": "Font Awesome Gallery",
+        "title": "Set Icon labels to Class Name"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.toggle-grid-type",
+        "category": "Font Awesome Gallery",
+        "title": "Toggle Grid Type"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-5",
+        "category": "Font Awesome Gallery",
+        "title": "Use FA v5"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-6",
+        "category": "Font Awesome Gallery",
+        "title": "Use FA v6"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.switch-version-7",
+        "category": "Font Awesome Gallery",
+        "title": "Use FA v7"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-click-copy",
+        "category": "Font Awesome Gallery",
+        "title": "Copy"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-click-insert",
+        "category": "Font Awesome Gallery",
+        "title": "Insert at cursor"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-classname",
+        "category": "Font Awesome Gallery",
+        "title": "Class name"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-html",
+        "category": "Font Awesome Gallery",
+        "title": "HTML tag"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-unicode",
+        "category": "Font Awesome Gallery",
+        "title": "Unicode"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-vue",
+        "category": "Font Awesome Gallery",
+        "title": "Vue array"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-react",
+        "category": "Font Awesome Gallery",
+        "title": "React JSX"
+      },
+      {
+        "command": "vscode-fontawesome-gallery.set-copy-content-svg",
+        "category": "Font Awesome Gallery",
+        "title": "SVG inline"
       }
-    ]
+    ],
+    "submenus": [
+      {
+        "id": "vscode-fontawesome-gallery.clickBehavior",
+        "label": "On Click Behavior"
+      },
+      {
+        "id": "vscode-fontawesome-gallery.copyContent",
+        "label": "Copy/Insert Content"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-5",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "a@1"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-6",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "a@2"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.switch-version-7",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "a@3"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.code-type-classname",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "b@1"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.code-type-unicode",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "b@2"
+        },
+        {
+          "submenu": "vscode-fontawesome-gallery.clickBehavior",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "c@1"
+        },
+        {
+          "submenu": "vscode-fontawesome-gallery.copyContent",
+          "when": "view == vscode-fontawesome-gallery-sidebar",
+          "group": "c@2"
+        }
+      ],
+      "vscode-fontawesome-gallery.clickBehavior": [
+        {
+          "command": "vscode-fontawesome-gallery.set-click-copy",
+          "group": "1@1",
+          "toggled": "vscode-fontawesome-gallery.clickBehavior == 'copy'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-click-insert",
+          "group": "1@2",
+          "toggled": "vscode-fontawesome-gallery.clickBehavior == 'insert'"
+        }
+      ],
+      "vscode-fontawesome-gallery.copyContent": [
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-classname",
+          "group": "1@1",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'classname'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-html",
+          "group": "1@2",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'html'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-unicode",
+          "group": "1@3",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'unicode'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-vue",
+          "group": "1@4",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'vue'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-react",
+          "group": "1@5",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'react'"
+        },
+        {
+          "command": "vscode-fontawesome-gallery.set-copy-content-svg",
+          "group": "1@6",
+          "toggled": "vscode-fontawesome-gallery.copyContent == 'svg'"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "compile": "rollup -c && webpack --mode production",
-    "watch": "concurrently \"rollup -c -w\" \"webpack --watch\"",
-    "package": "rollup -c  && webpack --mode production --devtool hidden-source-map",
+    "compile": "node build.js",
+    "watch": "node build.js --watch",
+    "package": "node build.js --production",
+    "build:icons": "node scripts/build-icons.js",
     "test-compile": "tsc -p ./",
     "test-watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run lint",
-    "lint": "eslint src --ext ts",
+    "lint": "eslint src",
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
-    "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
-    "@rollup/plugin-typescript": "^8.2.0",
-    "@tsconfig/svelte": "^1.0.10",
-    "@types/glob": "^7.1.3",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^12.20.5",
-    "@types/vscode": "^1.54.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
-    "autoprefixer": "^10.2.5",
-    "concurrently": "^6.0.0",
-    "eslint": "^7.19.0",
-    "figlet": "^1.5.0",
-    "glob": "^7.1.6",
-    "minimist": "^1.2.5",
-    "mocha": "^8.2.1",
-    "postcss": "^8.2.8",
-    "rollup": "^2.3.4",
-    "rollup-plugin-svelte": "^6.0.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "svelte": "^3.35.0",
-    "svelte-check": "^1.2.5",
-    "svelte-preprocess": "^4.6.9",
-    "tailwindcss": "^2.0.3",
-    "ts-loader": "^8.0.14",
-    "typescript": "^4.1.3",
-    "vscode-test": "^1.5.0",
-    "webpack": "^5.19.0",
-    "webpack-cli": "^4.4.0"
-  },
-  "dependencies": {
-    "svelte-clipboard": "^0.0.2"
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@vscode/test-electron": "^2.4.0",
+    "esbuild": "^0.24.0",
+    "esbuild-svelte": "^0.8.2",
+    "eslint": "^9.0.0",
+    "fa-free-v6": "npm:@fortawesome/fontawesome-free@^6.7.2",
+    "glob": "^11.0.0",
+    "js-yaml": "^4.2.0",
+    "mocha": "^10.0.0",
+    "svelte": "^5.0.0",
+    "svelte-check": "^4.0.0",
+    "typescript": "^5.0.0"
   }
 }

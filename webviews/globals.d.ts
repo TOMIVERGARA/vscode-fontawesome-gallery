@@ -1,11 +1,13 @@
 import * as _vscode from 'vscode';
 
 declare global {
-    const tsvscode: {
+    function acquireVsCodeApi(): {
         postMessage: ({
             command: String,
             content: any
-        }) => void
+        }) => void;
+        getState: () => any;
+        setState: (state: any) => void;
     }
 }
 

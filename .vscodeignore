@@ -15,3 +15,5 @@ media/github/**
 **/*.ts
 rollup.config.js
 webpack.config.js
+fontawesometools.js
+tsconfig.json

@@ -1,105 +1,279 @@
-import * as iconsList from '../data/fontawesome-5/metadata/fagIcons.json';
-import * as searchIndex from '../data/fontawesome-5/metadata/searchIndexArray.json'
-import Icon from './icon';
-import type { IconEntry, CategoryEntry } from '.';
-import { getIconsByCategory } from '../services/common';
+import * as iconsListV5 from "../data/fontawesome-5/metadata/fagIcons.json";
+import * as searchIndexV5 from "../data/fontawesome-5/metadata/searchIndexArray.json";
+import * as iconsV6 from "../data/fontawesome-6/metadata/icons.json";
+import * as iconsV7 from "../data/fontawesome-7/metadata/icons.json";
+import Icon from "./icon";
+import type { IconEntry, IconCollection, IconEntryV5, CategoryEntry } from ".";
+import { getIconsByCategory } from "../services/common";
 
-export interface IconEntryCollection {[key: string]: IconEntry; }
-export interface SearchIndexEntry {
-    name: string;
-    label: string;
-    searchTerms: string[];
+// ---- Legacy v5 types ----
+
+interface IconEntryCollectionV5 {
+  [key: string]: IconEntryV5;
+}
+
+interface SearchIndexEntryV5 {
+  name: string;
+  label: string;
+  searchTerms: string[];
+}
+
+// ---- Scored search result ----
+
+interface ScoredEntry {
+  name: string;
+  score: number;
 }
 
 export default class IconList {
-    public readonly iconEntries: IconEntryCollection;
-    public readonly searchIndex = searchIndex.searchIndexArray as SearchIndexEntry[];
-    icons: Icon[];
-    //Search Engine
-    searchReturnLimit: number = 10; // Maximum number of results to return
-    globalIdx: number = 0;
+  public readonly faVersion: string;
+  icons: Icon[];
+  globalIdx: number = 0;
 
+  // v5 state
+  private searchIndexV5: SearchIndexEntryV5[];
+  private iconEntriesV5: IconEntryCollectionV5;
 
-    constructor(){
-        this.iconEntries = iconsList as IconEntryCollection;
-        this.icons = [];
+  // v6/v7 state
+  private iconCollection: IconCollection | null;
+  private iconNames: string[]; // sorted list of all icon names
+
+  constructor(faVersion: string) {
+    this.faVersion = faVersion;
+    this.icons = [];
+
+    // v5 (legacy format)
+    this.searchIndexV5 = searchIndexV5.searchIndexArray as SearchIndexEntryV5[];
+    this.iconEntriesV5 = iconsListV5 as IconEntryCollectionV5;
+
+    // v6/v7 (new SVG format)
+    if (faVersion === "v7") {
+      this.iconCollection = iconsV7 as unknown as IconCollection;
+    } else {
+      this.iconCollection = iconsV6 as unknown as IconCollection;
+    }
+    this.iconNames = this.iconCollection
+      ? Object.keys(this.iconCollection.icons)
+      : [];
+  }
+
+  // ---- v5 helpers ----
+
+  private listFromV5Entry(iconName: string) {
+    const key = `fag_${iconName.replace(/-/g, "_")}`;
+    const entry = this.iconEntriesV5[key];
+    if (!entry?.styles) return;
+    for (const style of entry.styles) {
+      this.icons.push(new Icon(entry.name, entry.unicode, entry.label, style, undefined, entry.styles));
+    }
+  }
+
+  // ---- v6/v7 helpers ----
+
+  private listFromEntry(iconName: string) {
+    const entry: IconEntry | undefined = this.iconCollection!.icons[iconName];
+    if (!entry?.styles) return;
+    for (const style of entry.styles) {
+      this.icons.push(
+        new Icon(iconName, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles, entry.added_in ?? undefined)
+      );
+    }
+  }
+
+  public getIconByKey(key: string): Icon | null {
+    const [name, style] = key.split(":");
+    if (!name || !style) return null;
+    if (this.faVersion === "v5") {
+      const v5key = `fag_${name.replace(/-/g, "_")}`;
+      const entry = this.iconEntriesV5[v5key];
+      if (!entry) return null;
+      return new Icon(entry.name, entry.unicode, entry.label, style, undefined, entry.styles);
+    }
+    const entry = this.iconCollection?.icons[name];
+    if (!entry) return null;
+    return new Icon(name, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles, entry.added_in ?? undefined);
+  }
+
+  // ---- Search (v6/v7) ----
+
+  /**
+   * Score an icon against a query. Matches on the icon name rank higher than
+   * matches on search terms so that "github" → github icon beats code-branch.
+   *
+   *  Scores:
+   *   100 — icon name exact match
+   *    95 — label exact match
+   *    90 — search term exact match
+   *    80 — icon name starts with query
+   *    70 — label/term starts with query
+   *    60 — icon name contains query (substring)
+   *    50 — label/term contains query (substring)
+   *    30 — fuzzy subsequence on icon name
+   *    20 — fuzzy subsequence on label/term
+   */
+  private scoreIcon(iconName: string, entry: IconEntry, query: string): number {
+    const q = query.toLowerCase().trim();
+    if (!q) return 100;
+
+    const name = iconName;
+    const label = entry.label.toLowerCase();
+    const terms = entry.searchTerms;
+
+    // Name-level checks (highest priority)
+    if (name === q) return 100;
+    if (name.startsWith(q)) return 80;
+    if (name.includes(q)) return 60;
+
+    // Label
+    if (label === q) return 95;
+    if (label.startsWith(q)) return 70;
+    if (label.includes(q)) return 50;
+
+    // Search terms
+    let best = 0;
+    for (const term of terms) {
+      if (term === q) { best = Math.max(best, 90); continue; }
+      if (term.startsWith(q)) { best = Math.max(best, 70); continue; }
+      if (term.includes(q)) { best = Math.max(best, 50); continue; }
+    }
+    if (best > 0) return best;
+
+    // Fuzzy subsequence on name
+    let qi = 0;
+    for (let i = 0; i < name.length && qi < q.length; i++) {
+      if (name[i] === q[qi]) qi++;
+    }
+    if (qi === q.length) return 30;
+
+    // Fuzzy subsequence on label and terms
+    for (const term of [label, ...terms]) {
+      qi = 0;
+      for (let i = 0; i < term.length && qi < q.length; i++) {
+        if (term[i] === q[qi]) qi++;
+      }
+      if (qi === q.length) return 20;
     }
 
-    private isIterable (type: any) {
-      return type != null && typeof type[Symbol.iterator] === 'function'
-    }
+    return 0;
+  }
 
-    private listFromEntry(icon: string){
-        const formattedIconName = `fag_${icon.replace(/-/ig, '_')}`;
-        console.log(formattedIconName)
-        const entry: IconEntry = this.iconEntries[formattedIconName];
-        if(this.isIterable(entry.styles)){
-            for(const style of entry.styles){
-                const iconObj = new Icon(entry.name, entry.label, style);
-                this.icons.push(iconObj);
-            }
+  private searchV6(query: string): ScoredEntry[] {
+    const results: ScoredEntry[] = [];
+    for (const name of this.iconNames) {
+      const entry = this.iconCollection!.icons[name];
+      const score = this.scoreIcon(name, entry, query);
+      if (score > 0) results.push({ name, score });
+    }
+    results.sort((a, b) => b.score - a.score);
+    return results;
+  }
+
+  // ---- Legacy v5 search ----
+
+  private searchV5(filter: string): SearchIndexEntryV5[] {
+    const q = filter.toLowerCase();
+    return this.searchIndexV5.filter((icon) => {
+      if (icon.label.toLowerCase().includes(q)) return true;
+      for (const term of icon.searchTerms) {
+        if (term.toLowerCase().includes(q)) return true;
+      }
+      return false;
+    });
+  }
+
+  // ---- Public API ----
+
+  public generateList(category: string): Icon[] {
+    this.icons = [];
+    if (this.faVersion === "v5") {
+      if (category === "all") {
+        for (let i = 0; i < 100; i++) {
+          this.globalIdx = i;
+          this.listFromV5Entry(this.searchIndexV5[i].name);
         }
+      } else {
+        const cat: CategoryEntry = getIconsByCategory(category);
+        for (const icon of cat.icons) this.listFromV5Entry(icon);
+      }
+      return this.icons;
     }
 
-    private search(filter: string){
-        const results: SearchIndexEntry[] = this.searchIndex.filter(icon => {
-            for(const searchTerm of icon.searchTerms){
-                if(searchTerm.match(`^${filter}$`)){
-                  return true;
-                }else if(icon.label.toLowerCase().match(`^${filter}.*$`)){
-                  return true;
-                }
-                //Old Filter method
-                //return searchTerm.match(`^${filter}.*$`) || icon.label.toLowerCase().match(`^${filter}.*$`);
-            }
-        })
-        return results;
+    // v6/v7
+    if (category === "all") {
+      for (let i = 0; i < 100; i++) {
+        this.globalIdx = i;
+        this.listFromEntry(this.iconNames[i]);
+      }
+    } else {
+      const cats = this.iconCollection!.categories;
+      const cat = cats[category];
+      if (cat) {
+        for (const name of cat.icons) this.listFromEntry(name);
+      }
     }
+    return this.icons;
+  }
 
-    public generateList(category: string){
-        this.icons = [];
-        if(category === "all"){
-            //Old generation method.
-            // for(const icon in this.iconEntries){
-            //     if (counter > 92) return this.icons;
-            //     this.listFromEntry(icon);
-            //     counter++;
-            // }
-            for (let i = 0; i < 100; i++) {
-                this.globalIdx = i;
-                const iconFromIndex = this.searchIndex[i];
-                this.listFromEntry(iconFromIndex.name);
-            }
-            return this.icons
-        }else{
-           const iconsByCategory: CategoryEntry = getIconsByCategory(category);
-           for(const icon of iconsByCategory.icons){
-                this.listFromEntry(icon)
-           }
-           return this.icons
-        }
+  public loadMoreIcons(): Icon[] {
+    const start = this.globalIdx + 1;
+    if (this.faVersion === "v5") {
+      for (let i = start; i < start + 100; i++) {
+        this.globalIdx = i;
+        if (i >= this.searchIndexV5.length) break;
+        this.listFromV5Entry(this.searchIndexV5[i].name);
+      }
+    } else {
+      for (let i = start; i < start + 100; i++) {
+        this.globalIdx = i;
+        if (i >= this.iconNames.length) break;
+        this.listFromEntry(this.iconNames[i]);
+      }
     }
+    return this.icons;
+  }
 
-    public loadMoreIcons(){
-        const startPoint: number = this.globalIdx + 1;
-        for (let i = startPoint; i < startPoint + 100; i++) {
-            this.globalIdx = i;
-            const iconFromIndex = this.searchIndex[i];
-            this.listFromEntry(iconFromIndex.name);
-        }
-        return this.icons
+  public filterIcons(filter: string): Icon[] {
+    this.icons = [];
+    if (this.faVersion === "v5") {
+      for (const entry of this.searchV5(filter)) {
+        this.listFromV5Entry(entry.name);
+      }
+    } else {
+      for (const { name } of this.searchV6(filter)) {
+        this.listFromEntry(name);
+      }
     }
+    return this.icons;
+  }
 
-    public filterIcons(filter: string){
-        this.icons = [];
-        const matches: SearchIndexEntry[] = this.search(filter);
-        for(const icon of matches){
-             this.listFromEntry(icon.name);
-        }
-        return this.icons;
-    }
+  public getTotal(): number {
+    if (this.faVersion === "v5") return this.searchIndexV5.length;
+    return this.iconNames.length;
+  }
 
-    public getTotal(){
-        return this.searchIndex.length;
+  private newIconsPrefix(): string {
+    if (!this.iconCollection) return "";
+    const version = this.iconCollection.metadata?.version ?? "";
+    const parts = version.split(".");
+    return parts.length >= 2 ? `${parts[0]}.${parts[1]}` : version;
+  }
+
+  public getNewIcons(): Icon[] {
+    this.icons = [];
+    if (this.faVersion === "v5" || !this.iconCollection) return [];
+    const prefix = this.newIconsPrefix();
+    for (const name of this.iconNames) {
+      const entry = this.iconCollection.icons[name];
+      if (entry.added_in?.startsWith(prefix)) this.listFromEntry(name);
     }
+    return this.icons;
+  }
+
+  public getNewIconsCount(): number {
+    if (this.faVersion === "v5" || !this.iconCollection) return 0;
+    const prefix = this.newIconsPrefix();
+    return this.iconNames.filter((name) =>
+      this.iconCollection!.icons[name].added_in?.startsWith(prefix)
+    ).length;
+  }
 }

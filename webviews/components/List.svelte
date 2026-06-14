@@ -47,8 +47,6 @@
     onLogRecent,
   }: Props = $props();
 
-  let iconShortName = $derived(iconCode.split(" ").pop() ?? iconCode);
-
   let menuOpen = $state(false);
   let menuX = $state(0);
   let menuY = $state(0);
@@ -57,7 +55,6 @@
   let tooltipX = $state(0);
   let tooltipY = $state(0);
 
-  // "New" badge: icon was added in recent version (last minor release threshold)
   const NEW_THRESHOLDS: Record<string, string> = { v6: "6.6.0", v7: "7.0.0" };
   let isNew = $derived(() => {
     if (!addedIn || faVersion === "v5") return false;
@@ -82,9 +79,7 @@
     if (x < 4) x = 4;
 
     let y = rect.bottom + GAP;
-    if (y + TOOLTIP_H > window.innerHeight) {
-      y = rect.top - TOOLTIP_H - GAP;
-    }
+    if (y + TOOLTIP_H > window.innerHeight) y = rect.top - TOOLTIP_H - GAP;
 
     tooltipX = x;
     tooltipY = y;
@@ -214,7 +209,7 @@
 <div
   role="button"
   tabindex="0"
-  class="icon"
+  class="listItem"
   style="--icon-scale: {iconSize}"
   onclick={handlePrimaryClick}
   oncontextmenu={openContextMenu}
@@ -223,9 +218,30 @@
   onmouseleave={handleMouseLeave}
 >
   <span class="inner">
-    {#if isNew()}
-      <span class="badge-new">New</span>
-    {/if}
+    <div class="icon-container" style="position: relative;">
+      {#if isNew()}
+        <span class="badge-new">New</span>
+      {/if}
+      {#if faVersion !== "v5" && svgPath}
+        <svg
+          viewBox="0 0 {svgWidth} {svgHeight}"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d={svgPath} />
+        </svg>
+      {:else}
+        <i class={iconCode}></i>
+      {/if}
+    </div>
+    <div class="name-container">
+      {#if labelType === "iconClassname"}
+        <code>{iconCode}</code>
+      {:else if labelType === "iconUnicode"}
+        <code>{iconUnicode}</code>
+      {/if}
+    </div>
     <button
       class="btn-favorite"
       class:active={isFavorite}
@@ -235,121 +251,74 @@
       tabindex="-1"
       aria-label="toggle favorite"
     >{isFavorite ? "★" : "☆"}</button>
-    {#if faVersion !== "v5" && svgPath}
-      <svg
-        viewBox="0 0 {svgWidth} {svgHeight}"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d={svgPath} />
-      </svg>
-    {:else}
-      <i class={iconCode}></i>
-    {/if}
-    <div class="name-container">
-      {#if labelType === "iconClassname"}
-        <code>{iconShortName}</code>
-      {:else if labelType === "iconUnicode"}
-        <code>{iconUnicode}</code>
-      {/if}
-    </div>
   </span>
 </div>
 
 <style>
-  .icon {
-    display: inline-block;
-    width: 31%;
-    margin: 0 1% 4px;
+  .listItem {
+    width: 100%;
+    margin-bottom: 5px;
+    position: relative;
   }
 
-  @media only screen and (max-width: 250px) {
-    .icon {
-      width: 48%;
-      margin: 0 1% 4px;
-    }
-  }
-
-  @media only screen and (max-width: 215px) {
-    .icon {
-      width: 98%;
-      margin: 0 1% 4px;
-    }
-
-    .icon .inner {
-      height: 100%;
-    }
-
-    .icon .inner i,
-    .icon .inner svg {
-      font-size: calc(20vw * var(--icon-scale, 1));
-      height: calc(20vw * var(--icon-scale, 1));
-      padding: 10px 10px 3% 10px;
-    }
-
-    .icon .inner code {
-      font-size: 4vw;
-    }
-  }
-
-  .icon .inner:hover {
+  .listItem .inner:hover {
     background-color: var(--vscode-textSeparator-foreground);
   }
 
-  .icon .inner {
-    position: relative;
-    display: inline-block;
-    text-align: center;
+  .listItem .inner {
     width: 100%;
+    height: calc(14vw * var(--icon-scale, 1));
     overflow: hidden;
     background-color: var(--vscode-input-background);
     box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
     transition: all 0.3s ease-in-out;
-    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
   }
 
-  .icon .inner .name-container {
-    margin: 0px 5px 0px 5px;
+  .listItem .inner .name-container {
+    flex: 1;
+    min-width: 0;
+    padding: 0 5px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
-  .icon .inner i {
-    font-size: calc(15vw * var(--icon-scale, 1));
-    padding: 10px 10px 3% 10px;
-    display: block;
+  .listItem .inner i {
+    font-size: calc(10vw * var(--icon-scale, 1));
   }
 
-  .icon .inner svg {
-    height: calc(15vw * var(--icon-scale, 1));
+  .listItem .inner svg {
+    height: calc(10vw * var(--icon-scale, 1));
     width: auto;
-    max-width: 80%;
-    padding: 10px 0 3% 0;
-    display: block;
-    margin: 0 auto;
+    max-width: 100%;
   }
 
-  .icon .inner code {
+  .listItem .inner code {
     font-size: 3vw;
-    white-space: nowrap;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    white-space: nowrap;
     padding: 2px;
     border-radius: 3px;
     background-color: var(--vscode-editor-background);
   }
 
+  .listItem .icon-container {
+    flex: 0 0 calc(12vw * var(--icon-scale, 1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+  }
+
   .badge-new {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    font-size: 8px;
+    top: 0;
+    left: 0;
+    font-size: 7px;
     font-weight: bold;
-    padding: 1px 4px;
+    padding: 1px 3px;
     background: var(--vscode-activityBarBadge-background, #0078d4);
     color: var(--vscode-activityBarBadge-foreground, #fff);
     border-radius: 2px;
@@ -359,23 +328,21 @@
   }
 
   .btn-favorite {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    z-index: 2;
+    flex: 0 0 auto;
     width: auto;
     background: none;
     border: none;
-    padding: 0 2px;
-    font-size: 10px;
+    padding: 0 8px;
+    font-size: 12px;
     line-height: 1;
     cursor: pointer;
     color: var(--vscode-descriptionForeground);
     opacity: 0;
     transition: opacity 0.15s;
+    align-self: center;
   }
 
-  .icon .inner:hover .btn-favorite,
+  .listItem:hover .btn-favorite,
   .btn-favorite.active {
     opacity: 1;
   }
