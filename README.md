@@ -97,6 +97,7 @@ All extension settings are available from the command palette (`Ctrl+Shift+P` / 
 
 ```bash
 npm install
+npm run compile
 npm run watch   # keep this running
 # then press F5 in VS Code
 ```
