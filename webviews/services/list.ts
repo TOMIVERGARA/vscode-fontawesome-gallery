@@ -250,4 +250,30 @@ export default class IconList {
     if (this.faVersion === "v5") return this.searchIndexV5.length;
     return this.iconNames.length;
   }
+
+  private newIconsPrefix(): string {
+    if (!this.iconCollection) return "";
+    const version = this.iconCollection.metadata?.version ?? "";
+    const parts = version.split(".");
+    return parts.length >= 2 ? `${parts[0]}.${parts[1]}` : version;
+  }
+
+  public getNewIcons(): Icon[] {
+    this.icons = [];
+    if (this.faVersion === "v5" || !this.iconCollection) return [];
+    const prefix = this.newIconsPrefix();
+    for (const name of this.iconNames) {
+      const entry = this.iconCollection.icons[name];
+      if (entry.added_in?.startsWith(prefix)) this.listFromEntry(name);
+    }
+    return this.icons;
+  }
+
+  public getNewIconsCount(): number {
+    if (this.faVersion === "v5" || !this.iconCollection) return 0;
+    const prefix = this.newIconsPrefix();
+    return this.iconNames.filter((name) =>
+      this.iconCollection!.icons[name].added_in?.startsWith(prefix)
+    ).length;
+  }
 }

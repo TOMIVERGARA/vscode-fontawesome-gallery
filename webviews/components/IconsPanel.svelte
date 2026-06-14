@@ -46,6 +46,8 @@
       iconList = favorites.map((k) => obj.getIconByKey(k)).filter(Boolean) as IconModel[];
     } else if (panelCategory === "recents") {
       iconList = recents.map((k) => obj.getIconByKey(k)).filter(Boolean) as IconModel[];
+    } else if (panelCategory === "new") {
+      iconList = obj.getNewIcons();
     } else if (searchTerm) {
       iconList = obj.filterIcons(searchTerm);
     } else {

@@ -2,6 +2,7 @@
   import IconsPanel from "./IconsPanel.svelte";
   import { getIconCategories } from "../services/common";
   import { vscode } from "../services/index";
+  import IconList from "../services/list.ts";
 
   const savedState = vscode.getState() ?? {};
   let searchTerm = $state("");
@@ -16,6 +17,7 @@
   let recents = $state<string[]>([]);
 
   let categoryList = $derived(getIconCategories(faVersion));
+  let newIconsCount = $derived(new IconList(faVersion).getNewIconsCount());
 
   const clickBehaviorLabel: Record<string, string> = {
     copy: "Copy",
@@ -115,6 +117,9 @@
       {/if}
       {#if recents.length > 0}
         <option value="recents">Recent ({recents.length})</option>
+      {/if}
+      {#if newIconsCount > 0}
+        <option value="new">New ({newIconsCount})</option>
       {/if}
       <optgroup label="Categories">
         {#each categoryList as category}
