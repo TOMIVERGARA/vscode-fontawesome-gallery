@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getNonce } from "./nonce";
+import { version } from "../package.json";
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -28,9 +29,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           const iconSize = this._context.globalState.get<number>("fa-gallery.iconSize", 1);
           const favorites = this._context.globalState.get<string[]>("fa-gallery.favorites", []);
           const recents = this._context.globalState.get<string[]>("fa-gallery.recents", []);
+          const lastSeenVersion = this._context.globalState.get<string>("fa-gallery.lastSeenVersion", "");
+          const showWhatsNew = lastSeenVersion !== version;
           webviewView.webview.postMessage({
             command: "setInitialState",
-            data: { labelType, clickBehavior, copyContent, gridType, faVersion, iconSize, favorites, recents },
+            data: { labelType, clickBehavior, copyContent, gridType, faVersion, iconSize, favorites, recents, showWhatsNew },
           });
           break;
         }
@@ -61,6 +64,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           const updated = [key, ...recents.filter((k) => k !== key)].slice(0, 20);
           this._context.globalState.update("fa-gallery.recents", updated);
           webviewView.webview.postMessage({ command: "recentsUpdated", data: updated });
+          break;
+        }
+        case "dismiss-whats-new": {
+          this._context.globalState.update("fa-gallery.lastSeenVersion", version);
           break;
         }
         case "open-external": {

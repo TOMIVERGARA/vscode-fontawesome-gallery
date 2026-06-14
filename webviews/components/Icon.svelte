@@ -10,6 +10,7 @@
     iconCode: string;
     iconUnicode: string;
     iconLabel: string;
+    iconName: string;
     iconStyle: string;
     iconStylePrefix: string;
     iconStyles?: string[];
@@ -31,6 +32,7 @@
     iconCode,
     iconUnicode,
     iconLabel,
+    iconName,
     iconStyle,
     iconStylePrefix,
     iconStyles = [],
@@ -183,7 +185,7 @@
     }
     actions.push({
       label: "Open on fontawesome.com",
-      action: () => vscode.postMessage({ command: "open-external", content: { url: `https://fontawesome.com/icons/${iconLabel}` } }),
+      action: () => vscode.postMessage({ command: "open-external", content: { url: `https://fontawesome.com/icons/${iconName}` } }),
     });
     return actions;
   }

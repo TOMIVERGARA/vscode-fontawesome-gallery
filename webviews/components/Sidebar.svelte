@@ -1,5 +1,6 @@
 <script lang="ts">
   import IconsPanel from "./IconsPanel.svelte";
+  import WhatsNewModal from "./WhatsNewModal.svelte";
   import { getIconCategories } from "../services/common";
   import { vscode } from "../services/index";
   import IconList from "../services/list.ts";
@@ -15,6 +16,7 @@
   let iconSize = $state<number>(savedState.iconSize ?? 1);
   let favorites = $state<string[]>([]);
   let recents = $state<string[]>([]);
+  let showWhatsNew = $state(false);
 
   let categoryList = $derived(getIconCategories(faVersion));
   let newIconsCount = $derived(new IconList(faVersion).getNewIconsCount());
@@ -53,6 +55,11 @@
     gridType = gridType === "grid" ? "list" : "grid";
   }
 
+  function dismissWhatsNew() {
+    showWhatsNew = false;
+    vscode.postMessage({ command: "dismiss-whats-new" });
+  }
+
   function messageManager(event: MessageEvent) {
     const message = event.data;
     switch (message.command) {
@@ -65,6 +72,7 @@
         iconSize = message.data.iconSize ?? iconSize;
         favorites = message.data.favorites ?? [];
         recents = message.data.recents ?? [];
+        showWhatsNew = message.data.showWhatsNew ?? false;
         break;
       case "setLabelType":
         labelType = message.data;
@@ -95,6 +103,10 @@
     return () => window.removeEventListener("message", messageManager);
   });
 </script>
+
+{#if showWhatsNew}
+  <WhatsNewModal onclose={dismissWhatsNew} />
+{/if}
 
 <div>
   <form>

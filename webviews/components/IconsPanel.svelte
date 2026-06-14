@@ -129,6 +129,7 @@
           iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
           iconLabel={icon.label}
+          iconName={icon.name}
           iconStyle={icon.styleName}
           iconStylePrefix={icon.style}
           iconStyles={icon.allStyles}
@@ -150,6 +151,7 @@
           iconCode={faVersion == "v5" ? icon.iconCode : icon.iconCodeV6}
           iconUnicode={icon.unicode}
           iconLabel={icon.label}
+          iconName={icon.name}
           iconStyle={icon.styleName}
           iconStylePrefix={icon.style}
           iconStyles={icon.allStyles}

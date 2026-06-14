@@ -6,7 +6,8 @@
 		"lib": ["ES2020"],
 		"sourceMap": true,
 		"rootDir": "src",
-		"strict": true
+		"strict": true,
+		"resolveJsonModule": true
 	},
 	"exclude": [
 		"node_modules",
