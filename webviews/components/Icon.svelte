@@ -1,6 +1,7 @@
 <script lang="ts">
   import { vscode } from "../services/index";
   import ContextMenu, { type MenuAction } from "./ContextMenu.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
   interface Props {
     labelType?: string;
@@ -11,6 +12,7 @@
     iconLabel: string;
     iconStyle: string;
     iconStylePrefix: string;
+    iconStyles?: string[];
     faVersion?: string;
     svgPath?: string;
     svgWidth?: number;
@@ -26,15 +28,49 @@
     iconLabel,
     iconStyle,
     iconStylePrefix,
+    iconStyles = [],
     faVersion = "v6",
     svgPath = "",
     svgWidth = 512,
     svgHeight = 512,
   }: Props = $props();
 
+  // Short name: "fa-address-book" (last part of the full class string)
+  let iconShortName = $derived(iconCode.split(" ").pop() ?? iconCode);
+
   let menuOpen = $state(false);
   let menuX = $state(0);
   let menuY = $state(0);
+
+  let tooltipVisible = $state(false);
+  let tooltipX = $state(0);
+  let tooltipY = $state(0);
+
+  function handleMouseEnter(e: MouseEvent) {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const TOOLTIP_W = 220;
+    const TOOLTIP_H = 80;
+    const GAP = 4;
+
+    // Horizontal: center below the icon, clamp to viewport edges
+    let x = rect.left + rect.width / 2 - TOOLTIP_W / 2;
+    if (x + TOOLTIP_W > window.innerWidth) x = window.innerWidth - TOOLTIP_W - 4;
+    if (x < 4) x = 4;
+
+    // Vertical: below the icon by default, above if near the bottom
+    let y = rect.bottom + GAP;
+    if (y + TOOLTIP_H > window.innerHeight) {
+      y = rect.top - TOOLTIP_H - GAP;
+    }
+
+    tooltipX = x;
+    tooltipY = y;
+    tooltipVisible = true;
+  }
+
+  function handleMouseLeave() {
+    tooltipVisible = false;
+  }
 
   function copyText(text: string, label = "Copied to clipboard!") {
     navigator.clipboard.writeText(text).then(() => {
@@ -115,14 +151,26 @@
   />
 {/if}
 
+{#if tooltipVisible}
+  <Tooltip
+    x={tooltipX}
+    y={tooltipY}
+    iconLabel={iconLabel}
+    iconCode={iconCode}
+    iconUnicode={iconUnicode}
+    iconStyles={iconStyles}
+  />
+{/if}
+
 <div
   role="button"
   tabindex="0"
   class="icon"
-  title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
   onclick={handlePrimaryClick}
   oncontextmenu={openContextMenu}
   onkeydown={(e) => e.key === "Enter" && handlePrimaryClick()}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
 >
   <span class="inner">
     {#if faVersion !== "v5" && svgPath}
@@ -139,7 +187,7 @@
     {/if}
     <div class="name-container">
       {#if labelType === "iconClassname"}
-        <code>{iconCode}</code>
+        <code>{iconShortName}</code>
       {:else if labelType === "iconUnicode"}
         <code>{iconUnicode}</code>
       {/if}

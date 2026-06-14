@@ -10,6 +10,8 @@ export default class Icon {
   public readonly unicode: string;
   public readonly label: string;
   public readonly prefix: string;
+  /** All styles available for this icon (e.g. ["solid", "regular"]) */
+  public readonly allStyles: string[];
   /** v5 class string: "fas fa-heart" */
   public readonly iconCode: string;
   /** v6/v7 class string: "fa-solid fa-heart" */
@@ -24,7 +26,8 @@ export default class Icon {
     unicode: string,
     label: string,
     style: string,
-    svg?: SvgData
+    svg?: SvgData,
+    allStyles?: string[]
   ) {
     this.name = name;
     this.unicode = unicode;
@@ -32,6 +35,7 @@ export default class Icon {
     this.styleName = style;
     this.style = iconStylePrefix[style as IconStyle] ?? "fas";
     this.prefix = prefix;
+    this.allStyles = allStyles ?? [style];
     this.iconCode = `${this.style} ${prefix}${name}`;
     this.iconCodeV6 = `${iconStyleClassV6[style as IconStyle] ?? "fa-solid"} ${prefix}${name}`;
     if (svg) {

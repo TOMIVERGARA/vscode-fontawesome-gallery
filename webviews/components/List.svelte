@@ -1,6 +1,7 @@
 <script lang="ts">
   import { vscode } from "../services/index";
   import ContextMenu, { type MenuAction } from "./ContextMenu.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
   interface Props {
     labelType?: string;
@@ -11,6 +12,7 @@
     iconLabel: string;
     iconStyle: string;
     iconStylePrefix: string;
+    iconStyles?: string[];
     faVersion?: string;
     svgPath?: string;
     svgWidth?: number;
@@ -26,6 +28,7 @@
     iconLabel,
     iconStyle,
     iconStylePrefix,
+    iconStyles = [],
     faVersion = "v6",
     svgPath = "",
     svgWidth = 512,
@@ -35,6 +38,32 @@
   let menuOpen = $state(false);
   let menuX = $state(0);
   let menuY = $state(0);
+
+  let tooltipVisible = $state(false);
+  let tooltipX = $state(0);
+  let tooltipY = $state(0);
+
+  function handleMouseEnter(e: MouseEvent) {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const TOOLTIP_W = 220;
+    const TOOLTIP_H = 80;
+    const GAP = 4;
+
+    let x = rect.left + rect.width / 2 - TOOLTIP_W / 2;
+    if (x + TOOLTIP_W > window.innerWidth) x = window.innerWidth - TOOLTIP_W - 4;
+    if (x < 4) x = 4;
+
+    let y = rect.bottom + GAP;
+    if (y + TOOLTIP_H > window.innerHeight) y = rect.top - TOOLTIP_H - GAP;
+
+    tooltipX = x;
+    tooltipY = y;
+    tooltipVisible = true;
+  }
+
+  function handleMouseLeave() {
+    tooltipVisible = false;
+  }
 
   function copyText(text: string, label = "Copied to clipboard!") {
     navigator.clipboard.writeText(text).then(() => {
@@ -115,14 +144,26 @@
   />
 {/if}
 
+{#if tooltipVisible}
+  <Tooltip
+    x={tooltipX}
+    y={tooltipY}
+    iconLabel={iconLabel}
+    iconCode={iconCode}
+    iconUnicode={iconUnicode}
+    iconStyles={iconStyles}
+  />
+{/if}
+
 <div
   role="button"
   tabindex="0"
   class="listItem"
-  title={`${iconLabel} - ${iconStyle}/${iconStylePrefix}`}
   onclick={handlePrimaryClick}
   oncontextmenu={openContextMenu}
   onkeydown={(e) => e.key === "Enter" && handlePrimaryClick()}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
 >
   <span class="inner">
     <div class="icon-container">

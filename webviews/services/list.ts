@@ -64,7 +64,7 @@ export default class IconList {
     const entry = this.iconEntriesV5[key];
     if (!entry?.styles) return;
     for (const style of entry.styles) {
-      this.icons.push(new Icon(entry.name, entry.unicode, entry.label, style));
+      this.icons.push(new Icon(entry.name, entry.unicode, entry.label, style, undefined, entry.styles));
     }
   }
 
@@ -75,7 +75,7 @@ export default class IconList {
     if (!entry?.styles) return;
     for (const style of entry.styles) {
       this.icons.push(
-        new Icon(iconName, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg])
+        new Icon(iconName, entry.unicode, entry.label, style, entry.svg[style as keyof typeof entry.svg], entry.styles)
       );
     }
   }

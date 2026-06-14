@@ -127,6 +127,7 @@
     </button>
   </div>
   <div class="click-mode">
+    <span class="mode-label">Mode:</span>
     <span class="chip">{behaviorLabel}</span>
     <span class="chip">{contentLabel}</span>
   </div>
@@ -168,6 +169,12 @@
     display: flex;
     gap: 4px;
     margin-bottom: 0.5rem;
+  }
+
+  .mode-label {
+    font-size: 10px;
+    color: var(--vscode-descriptionForeground);
+    align-self: center;
   }
 
   .chip {

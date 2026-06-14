@@ -57,6 +57,7 @@
           iconLabel={icon.label}
           iconStyle={icon.styleName}
           iconStylePrefix={icon.style}
+          iconStyles={icon.allStyles}
           svgPath={icon.svgPath ?? ""}
           svgWidth={icon.svgWidth ?? 512}
           svgHeight={icon.svgHeight ?? 512}
@@ -72,6 +73,7 @@
           iconLabel={icon.label}
           iconStyle={icon.styleName}
           iconStylePrefix={icon.style}
+          iconStyles={icon.allStyles}
           svgPath={icon.svgPath ?? ""}
           svgWidth={icon.svgWidth ?? 512}
           svgHeight={icon.svgHeight ?? 512}
